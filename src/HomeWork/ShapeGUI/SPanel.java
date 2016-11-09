@@ -32,5 +32,6 @@ public class SPanel extends JPanel
         add(topbox,BorderLayout.NORTH,2);
         add(bottom,BorderLayout.SOUTH);
         setPreferredSize(d);
+        //gfhgfjg
     }
 }
