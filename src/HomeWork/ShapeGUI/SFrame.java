@@ -25,7 +25,6 @@ public class SFrame extends JFrame
         //Возможно здесь должен быть код с контейнером для рисования.
         //Класс Shape будет его наследовать и прикрепляться к окну.
         setSize(sp.getPreferredSize());
-        setMaximumSize(sp.getPreferredSize());
         setResizable(true);
         setLocationRelativeTo(null);
         setVisible(true);
