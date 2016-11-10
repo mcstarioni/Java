@@ -1,5 +1,7 @@
 package HomeWork.ShapeGUI;
 
+import HomeWork.ShapeGUI.Shape.*;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -13,7 +15,7 @@ public class SPanel extends JPanel
         setLayout(new BorderLayout());
         Box topbox = Box.createHorizontalBox();
         SEnum[] figures = SEnum.values();
-        HomeWork.ShapeGUI.Shape.Shape shape;
+        HomeWork.ShapeGUI.Shape.Shape shape = new Circle();
         for (int i = 0; i < figures.length; i++)
         {
             JButton jb = new JButton(figures[i].name());

@@ -12,8 +12,6 @@ public class SMain
     {
         SFrame sFrame = new SFrame();
         //s.charAt(2)
-
-
         //SFrame mw = new SFrame();
         //mw.setVisible(true);
         /*
