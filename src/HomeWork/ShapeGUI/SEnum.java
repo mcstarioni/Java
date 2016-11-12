@@ -2,12 +2,14 @@ package HomeWork.ShapeGUI;
 
 import HomeWork.ShapeGUI.Shape.*;
 
+import javax.swing.*;
+
 /**
  * Created by Макс on 07.09.2016.
  */
 public enum SEnum
 {
-    Triangle, Rectangle, Circle, Square, Fuck;
+    Triangle, Rectangle, Circle, Square;
     public static final int length = SEnum.values().length;
     public Shape getFigure(int i,int size)
     {
@@ -25,7 +27,7 @@ public enum SEnum
                 shape = new Rectangle(size*2,size);
                 break;
             case(2):
-                shape = new Circle(size*2);
+                shape = new Circle(size);
                 break;
             case(3):
                 shape = new Square(size);

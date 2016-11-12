@@ -32,4 +32,5 @@ public class Square extends Rectangle
         String s = "Square: ";
         return super.toString();
     }
+
 }

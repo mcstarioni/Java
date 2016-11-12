@@ -1,21 +1,27 @@
 package HomeWork.ShapeGUI.Shape;
 
+import HomeWork.ShapeGUI.SPanel;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
  * Created by Макс on 05.10.2016.
  */
-public abstract class Shape implements Moveable,ActionListener
+public abstract class Shape implements Moveable, ActionListener
 {
     protected Color color;
     protected MoveablePoint point;
-    protected JPanel basePanel;
+    protected static SPanel basePanel;
     protected boolean filled;
+    protected boolean isVisible;
     public Shape()
     {
         color = Color.BLUE;
+        this.isVisible = false;
+        point = new MoveablePoint(0,0,0,0);
     }
     public Shape(Color color, boolean filled)
     {
@@ -46,20 +52,22 @@ public abstract class Shape implements Moveable,ActionListener
         return point;
     }
 
+
     public void setPoint(MoveablePoint point)
     {
         this.point = point;
     }
 
-    public JPanel getBaseFrame()
+    public static JPanel getBasePanel()
     {
         return basePanel;
     }
 
-    public void setBaseFrame(JPanel base)
+    public static void setBasePanel(SPanel base)
     {
-        this.basePanel = base;
+        basePanel = base;
     }
+    public abstract void draw(Graphics g);
     public void moveUp()
     {
         point.moveUp();
@@ -72,8 +80,26 @@ public abstract class Shape implements Moveable,ActionListener
     {
         point.moveRight();
     }
+
+    public boolean isVisible()
+    {
+        return isVisible;
+    }
+
+    public void setVisible(boolean visible)
+    {
+        isVisible = visible;
+    }
+
     public void moveLeft()
     {
         point.moveLeft();
+    }
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        basePanel.setDrawing(this);
+        basePanel.repaint();
+        //draw(basePanel.getGraphics());
     }
 }

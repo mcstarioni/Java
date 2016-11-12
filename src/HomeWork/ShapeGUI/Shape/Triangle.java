@@ -1,5 +1,6 @@
 package HomeWork.ShapeGUI.Shape;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -27,6 +28,12 @@ public class Triangle extends Shape
     public String toString()
     {
         return null;
+    }
+
+    @Override
+    public void draw(Graphics g)
+    {
+
     }
 
     /**

@@ -33,6 +33,16 @@ public class Rectangle extends Shape
         String s = "Rectangle: " + color.toString();
         return s + "\nPerimeter - "+ getPerimeter() + "\nArea - " + getArea();
     }
+
+    @Override
+    public void draw(Graphics g)
+    {
+        g.setColor(this.color);
+        this.point = basePanel.getPoint();
+        g.fillRect(point.getX() - (int)width/2,point.getY() - (int)height/2,(int)width,(int)height);
+        System.out.println("Rectangle");
+    }
+
     public Rectangle(double width,double height)
     {
         super();
@@ -66,9 +76,4 @@ public class Rectangle extends Shape
      *
      * @param e
      */
-    @Override
-    public void actionPerformed(ActionEvent e)
-    {
-
-    }
 }

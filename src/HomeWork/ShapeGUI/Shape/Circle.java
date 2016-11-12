@@ -42,15 +42,20 @@ public class Circle extends Shape
         String s = "Circle: " + color.toString();
         return s + "\nArea - " + getArea() + "\nPerimeter - " + getPerimeter();
     }
-
+    @Override
+    public void draw(Graphics g)
+    {
+        g.setColor(this.color);
+        this.point = basePanel.getPoint();
+        int rad = (int)this.radius;
+        g.fillOval(point.getX() - rad, point.getY() - rad, 2 * rad, 2 * rad);
+        g.setColor(Color.BLACK);
+        g.drawOval(point.getX() - rad, point.getY() - rad, 2 * rad, 2 * rad);
+        System.out.println("Circle");
+    }
     /**
      * Invoked when an action occurs.
      *
      * @param e
      */
-    @Override
-    public void actionPerformed(ActionEvent e)
-    {
-
-    }
 }
