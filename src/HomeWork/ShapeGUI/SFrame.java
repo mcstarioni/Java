@@ -18,6 +18,7 @@ public class SFrame extends JFrame
         setSize(sp.getPreferredSize());
         setResizable(true);
         setLocationRelativeTo(null);
+        setAlwaysOnTop(true);
         setVisible(true);
     }
 }

@@ -5,6 +5,8 @@ package HomeWork.ShapeGUI.Shape;
  */
 public interface Moveable
 {
+    public void moveX();
+    public void moveY();
     public void moveUp();
     public void moveDown();
     public void moveRight();

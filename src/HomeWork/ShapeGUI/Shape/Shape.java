@@ -1,6 +1,7 @@
 package HomeWork.ShapeGUI.Shape;
 
-import HomeWork.ShapeGUI.SPanel;
+import HomeWork.ShapeGUI.*;
+import HomeWork.ShapeGUI.Canvas;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,14 +15,24 @@ public abstract class Shape implements Moveable, ActionListener
 {
     protected Color color;
     protected MoveablePoint point;
-    protected static SPanel basePanel;
+    protected static Canvas basePanel;
     protected boolean filled;
     protected boolean isVisible;
+    public boolean isStanding()
+    {
+        if (point.getVelocity().X == 0 && point.getVelocity().Y == 0)
+        {
+            return true;
+        }else
+        {
+            return false;
+        }
+    }
     public Shape()
     {
         color = Color.BLUE;
         this.isVisible = false;
-        point = new MoveablePoint(0,0,0,0);
+        point = new MoveablePoint(0,0,0,0,0,0);
     }
     public Shape(Color color, boolean filled)
     {
@@ -51,19 +62,15 @@ public abstract class Shape implements Moveable, ActionListener
     {
         return point;
     }
-
-
     public void setPoint(MoveablePoint point)
     {
         this.point = point;
     }
-
-    public static JPanel getBasePanel()
+    public static Canvas getBasePanel()
     {
         return basePanel;
     }
-
-    public static void setBasePanel(SPanel base)
+    public static void setBasePanel(Canvas base)
     {
         basePanel = base;
     }
@@ -71,35 +78,49 @@ public abstract class Shape implements Moveable, ActionListener
     public void moveUp()
     {
         point.moveUp();
+        draw(basePanel.getGraphics());
+
+
     }
     public void moveDown()
     {
         point.moveDown();
+        System.out.println("Draw down");
+        draw(basePanel.getGraphics());
     }
     public void moveRight()
     {
         point.moveRight();
+        draw(basePanel.getGraphics());
     }
-
+    public void moveLeft()
+    {
+        point.moveLeft();
+        draw(basePanel.getGraphics());
+    }
+    public void moveX()
+    {
+        point.moveX();
+        draw(basePanel.getGraphics());
+    }
+    public void moveY()
+    {
+        point.moveY();
+        draw(basePanel.getGraphics());
+    }
     public boolean isVisible()
     {
         return isVisible;
     }
-
     public void setVisible(boolean visible)
     {
         isVisible = visible;
-    }
-
-    public void moveLeft()
-    {
-        point.moveLeft();
     }
     @Override
     public void actionPerformed(ActionEvent e)
     {
         basePanel.setDrawing(this);
+        setPoint(basePanel.getPoint());
         basePanel.repaint();
-        //draw(basePanel.getGraphics());
     }
 }

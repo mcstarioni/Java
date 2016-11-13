@@ -38,8 +38,7 @@ public class Rectangle extends Shape
     public void draw(Graphics g)
     {
         g.setColor(this.color);
-        this.point = basePanel.getPoint();
-        g.fillRect(point.getX() - (int)width/2,point.getY() - (int)height/2,(int)width,(int)height);
+        g.fillRect((int)point.getX() - (int)width/2,(int)point.getY() - (int)height/2,(int)width,(int)height);
         System.out.println("Rectangle");
     }
 
@@ -71,9 +70,4 @@ public class Rectangle extends Shape
     {
         this.height = height;
     }
-    /**
-     * Invoked when an action occurs.
-     *
-     * @param e
-     */
 }
