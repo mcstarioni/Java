@@ -6,7 +6,10 @@ import HomeWork.ShapeGUI.Shape.Shape;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static java.lang.Math.tan;
 import static java.lang.Thread.sleep;
+import java.math.*;
 
 /**
  * Created by mcstarioni on 12.11.2016.
@@ -16,7 +19,7 @@ public class Canvas extends JPanel implements Runnable {
     protected Shape drawing;
     protected SPanel base;
     protected Thread thread;
-    protected final double A = 1;
+    protected final double A = 0.3;
     boolean up = false;
     boolean down = false;
     boolean right = false;
@@ -56,30 +59,34 @@ public class Canvas extends JPanel implements Runnable {
     {
         if (left && !right)
         {
-            drawing.getPoint().getAcceleration().setX(1);
+            drawing.getPoint().getAcceleration().setX(-A);
             drawing.moveX();
         }
         if (!left && right)
         {
-            drawing.moveRight();
+            drawing.getPoint().getAcceleration().setX(A);
+            drawing.moveX();
         }
         if (up && !down)
         {
-            drawing.moveUp();
+            drawing.getPoint().getAcceleration().setY(-A);
+            drawing.moveY();
         }
         if (!up && down)
         {
-            drawing.moveDown();
+            drawing.getPoint().getAcceleration().setY(A);
+            drawing.moveY();
         }
         if (!left && !right && (int)drawing.getPoint().getVelocity().X() != 0)
             inertionMoveX();
-        if (!up && !right && (int)drawing.getPoint().getVelocity().Y() != 0)
+        if (!up && !down && (int)drawing.getPoint().getVelocity().Y() != 0)
             inertionMoveY();
     }
     public void inertionMoveX()
     {
-        int dir = (int)drawing.getPoint().getVelocity().X();
-        if (dir > 1)
+        double dir = drawing.getPoint().getVelocity().X();
+        double alfa = drawing.getPoint().getVelocity().Y()/dir;
+        if ((int)dir > 0)
         {
             drawing.getPoint().getAcceleration().setX(-A);
         }
@@ -95,10 +102,11 @@ public class Canvas extends JPanel implements Runnable {
     }
     public void inertionMoveY()
     {
-        int dir = (int)drawing.getPoint().getVelocity().Y();
-        if (dir > 1)
+        double dir = drawing.getPoint().getVelocity().Y();
+        //double alfa = dir/drawing.getPoint().getVelocity().X();
+        if ((int)dir > 0)
         {
-            drawing.getPoint().getAcceleration().setY(A);
+            drawing.getPoint().getAcceleration().setY(-A);
         }
         else
         {
@@ -118,7 +126,7 @@ public class Canvas extends JPanel implements Runnable {
                 move();
                 repaint();
                 try {
-                    sleep(40);
+                    sleep(25);
                 } catch (InterruptedException e) {
                     break;
                 }
