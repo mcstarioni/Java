@@ -5,77 +5,97 @@ package HomeWork.ShapeGUI.Shape;
  */
 public class MoveablePoint implements Moveable
 {
-    private int Y;
-    private int X;
-    private int dY;
-    private int dX;
-    private int aX;
-    private int aY;
+    private Point coordinate;
+    private Point velocity;
+    private Point acceleration;
 
-    public int getY()
+    public MoveablePoint()
     {
-        return Y;
+        coordinate = new Point(0,0);
+        velocity = new Point(0,0);
+        acceleration = new Point(0,0);
     }
-
-    public void setY(int y)
+    public MoveablePoint(double X, double Y, double vX, double vY,double aX, double aY)
     {
-        Y = y;
+        coordinate = new Point(X,Y);
+        velocity = new Point(vX,vY);
+        acceleration = new Point(aX,aY);
     }
-
-    public int getX()
+    public void moveX()
     {
-        return X;
+        velocity.X += acceleration.X;
+        coordinate.X += velocity.X;
     }
-
-    public void setX(int x)
+    public void moveY()
     {
-        X = x;
-    }
-
-    public int getdY()
-    {
-        return dY;
-    }
-
-    public void setdY(int dY)
-    {
-        this.dY = dY;
-    }
-
-    public int getdX()
-    {
-        return dX;
-    }
-
-    public void setdX(int dX)
-    {
-        this.dX = dX;
-    }
-
-    public MoveablePoint(int Y, int X, int dY, int dX)
-    {
-        this.Y = Y;
-        this.X = X;
-        this.dY = dY;
-        this.dX = dX;
+        velocity.Y += acceleration.Y;
+        coordinate.Y += velocity.Y;
     }
     public void moveUp()
     {
-        Y += dY;
+
+        velocity.Y += acceleration.Y;
+        coordinate.Y -= velocity.Y;
     }
 
     public void moveDown()
     {
-        Y -= dY;
+        velocity.Y += acceleration.Y;
+        coordinate.Y += velocity.Y;
     }
 
     public void moveRight()
     {
-        X += dX;
+        velocity.X += acceleration.X;
+        coordinate.X += velocity.X;
     }
 
     public void moveLeft()
     {
-        X -= dX;
+        velocity.X += acceleration.X;
+        coordinate.X -= velocity.X;
     }
+
+    public double getY()
+    {
+        return coordinate.Y();
+    }
+    public void setY(double y)
+    {
+        coordinate.setY(y);
+    }
+
+    public double getX()
+    {
+        return coordinate.X();
+    }
+    public void setX(double x)
+    {
+        coordinate.setX(x);
+    }
+
+    public void setAX(double x){acceleration.X = x;}
+    public void setAY(double y){acceleration.Y = y;}
+
+    public Point getCoordinate() {
+        return coordinate;
+    }
+    public void setCoordinate(Point coordinate) {
+        this.coordinate = coordinate;
+    }
+
+    public Point getVelocity() {
+        return velocity;
+    }
+    public void setVelocity(Point velocity) {
+        this.velocity = velocity;
+    }
+
+    public Point getAcceleration() {
+        return acceleration;
+    }
+    public void setAcceleration(Point acceleration) {
+        this.acceleration = acceleration;
+    }
+
 }

@@ -46,16 +46,11 @@ public class Circle extends Shape
     public void draw(Graphics g)
     {
         g.setColor(this.color);
-        this.point = basePanel.getPoint();
+        //this.point = basePanel.getPoint();
         int rad = (int)this.radius;
-        g.fillOval(point.getX() - rad, point.getY() - rad, 2 * rad, 2 * rad);
+        g.fillOval((int) point.getX() - rad, (int) point.getY() - rad, 2 * rad, 2 * rad);
         g.setColor(Color.BLACK);
-        g.drawOval(point.getX() - rad, point.getY() - rad, 2 * rad, 2 * rad);
+        g.drawOval((int) point.getX() - rad, (int) point.getY() - rad, 2 * rad, 2 * rad);
         System.out.println("Circle");
     }
-    /**
-     * Invoked when an action occurs.
-     *
-     * @param e
-     */
 }
