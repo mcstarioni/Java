@@ -1,5 +1,9 @@
 package Test;
 
+import javax.swing.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 /**
  * Created by mcstarioni on 13.11.2016.
  */
@@ -19,17 +23,37 @@ package Test;
             System.out.println("Работа дочернего потока завершена - " + ct.getName());
         }
     }
-    class App {
+    class App extends JFrame implements KeyListener {
 
         public static void main(String[] args) {
-            System.out.println("Родительский поток.");
-            for(int i = 1; i <= 10; i++){
-                Thread t = new Thread(new AppThread());
-                t.setName("Дочь - "+i);
-                t.start();
-                //Thread.yield();
-            }
+            App ap = new App();
+
+        }
+        App()
+        {
+            super("MaxLox");
+            this.setVisible(true);
+            this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            this.setContentPane(new JPanel());
+            this.getContentPane().setFocusable(true);
+            this.getContentPane().addKeyListener(this);
         }
 
 
+        @Override
+        public void keyTyped(KeyEvent e) {
+            System.out.println(e.getKeyChar());
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            System.out.println(e.getKeyChar());
+                    /*writingLabel.setText(writingLabel.getText() + e.getKeyChar());
+                    writingLabel.repaint();*/
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            System.out.println(" c " + e.getKeyChar());
+        }
     }
