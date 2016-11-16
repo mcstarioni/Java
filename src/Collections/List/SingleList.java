@@ -135,12 +135,24 @@ public class SingleList<T> implements List<T>
         head.next = null;
         size = 0;
     }
+    public  void reverse(Node<T> start)
+    {
+        if(start.next == null)
+        {
 
+            head = new Node<T>(null,start);
+        }else
+        {
+            reverse(start.next);
+            start.next.next = start;
+        }
+    }
     @Override
     public <E extends Collection<T>> void merge(E master, E merged)
     {
 
     }
+    public Node<T> getHead(){return head;}
 
     public int size()
     {
