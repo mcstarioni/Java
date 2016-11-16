@@ -21,7 +21,7 @@ public enum SEnum
         switch(i)
         {
             case(0):
-
+                shape = new Triangle(size);
                 break;
             case(1):
                 shape = new Rectangle(size*2,size);
