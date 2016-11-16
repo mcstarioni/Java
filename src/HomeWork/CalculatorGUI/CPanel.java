@@ -52,7 +52,7 @@ public class CPanel extends JPanel implements ActionListener,KeyListener{
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == enter)
         {
-            text.setText(RPN.);
+            text.setText(""+RPN.calculate(text.getText()));
         }
         else {
             text.setText(text.getText() + e.getActionCommand());
