@@ -139,7 +139,6 @@ public class SingleList<T> implements List<T>
     {
         if(start.next == null)
         {
-
             head = new Node<T>(null,start);
         }else
         {

@@ -20,8 +20,10 @@ public class CPanel extends JPanel implements ActionListener,KeyListener{
         setLayout(new BorderLayout(0,5));
         Box top = Box.createHorizontalBox();
         rpn = new JCheckBox("RPN");
+        rpn.setSelected(true);
         top.add(rpn);
-        text = new JTextField("Enter your expression here");
+        text = new JTextField("");
+        text.setColumns(15);
         top.add(text);
         enter = new JButton("=");
         enter.addActionListener(this);
@@ -52,23 +54,25 @@ public class CPanel extends JPanel implements ActionListener,KeyListener{
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == enter)
         {
-            text.setText(""+RPN.calculate(text.getText()));
+            if(rpn.isSelected())
+            {
+                text.setText(""+RPN.count(text.getText()));
+            }
+            else
+            {
+                text.setText(""+RPN.getRPN(text.getText()));
+            }
         }
         else {
             text.setText(text.getText() + e.getActionCommand());
         }
     }
-
     @Override
     public void keyTyped(KeyEvent e) {
         text.setText(text.getText() + e.getKeyChar());
     }
-
     @Override
-    public void keyPressed(KeyEvent e) {
-    }
-
+    public void keyPressed(KeyEvent e) {}
     @Override
-    public void keyReleased(KeyEvent e) {
-    }
+    public void keyReleased(KeyEvent e) {}
 }
