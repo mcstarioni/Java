@@ -69,7 +69,18 @@ public class CPanel extends JPanel implements ActionListener,KeyListener{
     }
     @Override
     public void keyTyped(KeyEvent e) {
-        text.setText(text.getText() + e.getKeyChar());
+        char c = e.getKeyChar();
+        System.out.println(c);
+        if(Character.isDigit(c) || RPN.isOperator(c) || RPN.isDelimiter(c)) {
+            text.setText(text.getText() + e.getKeyChar());
+        }
+        else
+        {
+            if(e.getKeyCode() == 8)
+            {
+                text.setText(text.getText().substring(0,text.getText().length() - 1));
+            }
+        }
     }
     @Override
     public void keyPressed(KeyEvent e) {}

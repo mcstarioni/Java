@@ -10,5 +10,6 @@ public class CButton extends JButton {
     {
         super(s);
         setActionCommand(this.getText());
+        setFocusable(false);
     }
 }

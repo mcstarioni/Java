@@ -114,7 +114,7 @@ public class RPN {
     }
     public static boolean isOperator(char c)
     {
-        return getPriority(c) == 6;
+        return getPriority(c) != 6;
     }
     public static boolean isDelimiter(char c)
     {
