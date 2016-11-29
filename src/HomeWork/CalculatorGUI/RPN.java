@@ -13,25 +13,25 @@ public class RPN {
     }
     public static String getRPN(String input)
     {
-        String output = new String(); //Строка для хранения выражения
-        java.util.Stack<Character> operStack = new java.util.Stack<>(); //Стек для хранения операторов
+        String output = ""; 
+        Stack<Character> operators = new Stack<>(); //Стек для хранения операторов
         for (int i = 0; i < input.length(); i++) //Для каждого символа в входной строке
         {
             char c = input.charAt(i);
-            //Разделители пропускаем
-//            if (isDelimiter(c))
-//                continue; //Переходим к следующему символу
-            //Если символ - цифра, то считываем все число
-            if (isDigit(c)) //Если цифра
+            if (isDelimiter(c))
+                continue;
+            if (RPN.isDigit(c)) //Если цифра
             {
                 //Читаем до разделителя или оператора, что бы получить число
-                while (!isOperator(c))
-                {
-                    output += input.charAt(i); //Добавляем каждую цифру числа к нашей строке
+                while (!RPN.isDelimiter(c) && !RPN.isOperator(c)) {
+                    output += c; //Добавляем каждую цифру числа к нашей строке
                     i++; //Переходим к следующему символу
-                    if (i == input.length()) break; //Если символ - последний, то выходим из цикла
+                    if (i == input.length())
+                        break;
+                    else
+                        c = input.charAt(i);
+                    //Если символ - последний, то выходим из цикла
                 }
-
                 output += " "; //Дописываем после числа пробел в строку с выражением
                 i--; //Возвращаемся на один символ назад, к символу перед разделителем
             }
@@ -39,74 +39,81 @@ public class RPN {
             if (isOperator(c)) //Если оператор
             {
                 if (c == '(') //Если символ - открывающая скобка
-                    operStack.push(c); //Записываем её в стек
-                else if (c == ')') //Если символ - закрывающая скобка
-                {
-                    //Выписываем все операторы до открывающей скобки в строку
-                    char s = operStack.pop();
-                    while (s != '(')
+                    operators.push(c); //Записываем её в стек
+                else {
+                    if (c == ')') //Если символ - закрывающая скобка
                     {
-                        output += s + ' ';
-                        s = operStack.pop();
+                        //Выписываем все операторы до открывающей скобки в строку
+                        char s = operators.pop();
+                        while (s != '(') {
+                            output += s + ' ';
+                            s = operators.pop();
+                        }
+                    } else //Если любой другой оператор
+                    {
+                        if (operators.size() > 0) //Если в стеке есть элементы
+                            if (getPriority(c) <= getPriority(operators.peek())) //И если приоритет нашего оператора меньше или равен приоритету оператора на вершине стека
+                                output += operators.pop() + " "; //То добавляем последний оператор из стека в строку с выражением
+                        operators.push(c); //Если стек пуст, или же приоритет оператора выше - добавляем операторов на вершину стека
                     }
-                }
-                else //Если любой другой оператор
-                {
-                    if (operStack.size() > 0) //Если в стеке есть элементы
-                        if (getPriority(c) <= getPriority(operStack.peek())) //И если приоритет нашего оператора меньше или равен приоритету оператора на вершине стека
-                            output += operStack.pop() + " "; //То добавляем последний оператор из стека в строку с выражением
-                    operStack.push(c); //Если стек пуст, или же приоритет оператора выше - добавляем операторов на вершину стека
                 }
             }
         }
         //Когда прошли по всем символам, выкидываем из стека все оставшиеся там операторы в строку
-        while (operStack.size() > 0)
-            output += operStack.pop() + " ";
-
-        return output; //Возвращаем выражение в постфиксной записи
+        while (operators.size() > 0)
+            output += operators.pop() + " ";
+        return output;
     }
     public static double count(String input)
     {
         System.out.println(input);
-        double result = 0; //Результат
-        Stack<Double> temp = new Stack<Double>(); //Dhtvtyysq стек для решения
-
-        for (int i = 0; i < input.length(); i++) //Для каждого символа в строке
+        Stack<Double> temp = new Stack<Double>();
+        for (int i = 0; i < input.length(); i++)
         {
-            //Если символ - цифра, то читаем все число и записываем на вершину стека
-            if (isDigit(input.charAt(i)))
+            char c = input.charAt(i);
+            String number = "";
+            if (RPN.isDigit(c) || c == '.')
             {
-                System.out.println(input.charAt(i));
-                String a = "";
-
-                System.out.println(i);
-                while (!isDelimiter(input.charAt(i)) && !isOperator(input.charAt(i))) //Пока не разделитель
-                {
-                    a += input.charAt(i); //Добавляем
+                while (c != ' ' && !RPN.isOperator(c)) {
+                    number += c;
                     i++;
-                    if (i == input.length()) break;
+                    c = input.charAt(i);
                 }
-                System.out.println(a);
-                temp.push(Double.parseDouble(a)); //Записываем в стек
-                i--;
+                temp.push(Double.parseDouble(number));
             }
-            else if (isOperator(input.charAt(i))) //Если символ - оператор
+            else
             {
-                //Берем два последних значения из стека
-                double a = temp.pop();
-                double b = temp.pop();
-                switch (input.charAt(i)) //И производим над ними действие, согласно оператору
+                if (RPN.isOperator(c))
                 {
-                    case '+': result = b + a; break;
-                    case '-': result = b - a; break;
-                    case '*': result = b * a; break;
-                    case '/': result = b / a; break;
-                    //case '^': result = double.Parse(Math.Pow(double.Parse(b.ToString()), double.Parse(a.ToString())).ToString()); break;
+                    Double a = temp.pop();
+                    Double b = temp.pop();
+                    switch (RPN.getPriority(c))
+                    {
+                        case(2):
+                        {
+                            temp.push(a+b);
+                            break;
+                        }
+                        case(3):
+                        {
+                            temp.push(b-a);
+                            break;
+                        }
+                        case(4):
+                        {
+                            temp.push(a*b);
+                            break;
+                        }
+                        case(5):
+                        {
+                            temp.push(b/a);
+                            break;
+                        }
+                    }
                 }
-                temp.push(result); //Результат вычисления записываем обратно в стек
             }
         }
-        return temp.peek(); //Забираем результат всех вычислений из стека и возвращаем его
+        return temp.peek();
     }
     public static boolean isDigit(char c)
     {
@@ -118,7 +125,7 @@ public class RPN {
     }
     public static boolean isDelimiter(char c)
     {
-        if (' ' == c)
+        if (' ' == c || '(' == c || ')' == c)
             return true;
         return false;
     }
@@ -131,7 +138,7 @@ public class RPN {
             case '+': return 2;
             case '-': return 3;
             case '*': return 4;
-            case '/': return 4;
+            case '/': return 5;
             default: return 6;
         }
     }

@@ -30,7 +30,8 @@ public class CPanel extends JPanel implements ActionListener,KeyListener{
         top.add(enter);
         char[] numbers = {'1','2','3','4','5','6','7','8','9','(','0',')'};
         char[] operators = {'+','-','*','/'};
-        JPanel keys = new JPanel(new GridLayout(4,4,5,2));
+        GridLayout layout = new GridLayout(4,4,5,5);
+        JPanel keys = new JPanel(layout);
         int k = 0;
         for(int i = 0; i < 4; i++)
         {
@@ -38,10 +39,12 @@ public class CPanel extends JPanel implements ActionListener,KeyListener{
             {
                 CButton button = new CButton(""+numbers[k]);
                 button.addActionListener(this);
+                button.setMaximumSize(new Dimension(15,15));
                 keys.add(button);
             }
             CButton button = new CButton(""+operators[i]);
             button.addActionListener(this);
+            button.setMaximumSize(new Dimension(15,15));
             keys.add(button);
         }
         add(top,BorderLayout.NORTH);
@@ -49,7 +52,6 @@ public class CPanel extends JPanel implements ActionListener,KeyListener{
         setFocusable(true);
         addKeyListener(this);
     }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == enter)
@@ -61,6 +63,7 @@ public class CPanel extends JPanel implements ActionListener,KeyListener{
             else
             {
                 text.setText(""+RPN.getRPN(text.getText()));
+                rpn.setSelected(true);
             }
         }
         else {
