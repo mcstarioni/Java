@@ -2,15 +2,33 @@ package Collections.Tree;
 
 import Collections.List.Stack;
 import HomeWork.CalculatorGUI.RPN;
+import com.sun.awt.AWTUtilities;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.jar.JarFile;
 
 /**
  * Created by mcstarioni on 30.11.2016.
  */
 public class TreeMain {
+    public ArrayList<JPanel> panels;
     public static void main(String[] args) {
-        String input = "2 3 5 6 7 + + + +";
+        String input = "2 3 5 6 7 + + + ";
         BinTree<String> tree =  fillTree(input);
         printTree(tree,1);
+
+    }
+    class CustomPanel extends JPanel
+    {
+        CustomPanel()
+        {
+            super();
+            BoxLayout layout = new BoxLayout(this,BoxLayout.PAGE_AXIS);
+            panels = new ArrayList<>();
+            //setLayout();
+        }
     }
     public static BinTree<String> fillTree(String input)
     {
