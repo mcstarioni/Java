@@ -5,8 +5,8 @@ import Collections.List.Stack;
 /**
  * Created by mcstarioni on 15.11.2016.
  */
-
-public class RPN {
+public class RPN
+{
     public static double calculate(String input)
     {
         return count(getRPN(input));
@@ -14,54 +14,61 @@ public class RPN {
     public static String getRPN(String input)
     {
         String output = ""; 
-        Stack<Character> operators = new Stack<>(); //Стек для хранения операторов
-        for (int i = 0; i < input.length(); i++) //Для каждого символа в входной строке
+        Stack<Character> operators = new Stack<>();
+        for (int i = 0; i < input.length(); i++)
         {
             char c = input.charAt(i);
-            if (isDelimiter(c))
+            if (RPN.isDelimiter(c))
                 continue;
-            if (RPN.isDigit(c)) //Если цифра
+            if (RPN.isDigit(c))
             {
-                //Читаем до разделителя или оператора, что бы получить число
                 while (!RPN.isDelimiter(c) && !RPN.isOperator(c)) {
-                    output += c; //Добавляем каждую цифру числа к нашей строке
-                    i++; //Переходим к следующему символу
+                    output += c;
+                    i++;
                     if (i == input.length())
                         break;
                     else
                         c = input.charAt(i);
-                    //Если символ - последний, то выходим из цикла
                 }
-                output += " "; //Дописываем после числа пробел в строку с выражением
-                i--; //Возвращаемся на один символ назад, к символу перед разделителем
+                output += " ";
+                i--;
+                continue;
             }
-            //Если символ - оператор
-            if (isOperator(c)) //Если оператор
+            if (RPN.isOperator(c))
             {
-                if (c == '(') //Если символ - открывающая скобка
-                    operators.push(c); //Записываем её в стек
-                else {
-                    if (c == ')') //Если символ - закрывающая скобка
-                    {
-                        //Выписываем все операторы до открывающей скобки в строку
-                        char s = operators.pop();
-                        while (s != '(') {
-                            output += s + ' ';
-                            s = operators.pop();
-                        }
-                    } else //Если любой другой оператор
-                    {
-                        if (operators.size() > 0) //Если в стеке есть элементы
-                            if (getPriority(c) <= getPriority(operators.peek())) //И если приоритет нашего оператора меньше или равен приоритету оператора на вершине стека
-                                output += operators.pop() + " "; //То добавляем последний оператор из стека в строку с выражением
-                        operators.push(c); //Если стек пуст, или же приоритет оператора выше - добавляем операторов на вершину стека
-                    }
+                System.out.println(c);
+                if (RPN.getPriority(c) > RPN.getPriority(operators.peek())
+                        || operators.isEmpty()
+                        || operators.peek() == '(') {
+                    operators.push(c);
+                } else {
+                    do {
+                        output += operators.pop() + " ";
+                    } while (RPN.getPriority(c) < RPN.getPriority(operators.peek())
+                            && !operators.isEmpty()
+                            && operators.peek() != '(');
+                    operators.push(c);
                 }
+                continue;
             }
+            if(c == '(')
+            {
+                operators.push(c);
+                continue;
+            }
+            if(c == ')')
+            {
+                while(!operators.isEmpty() && operators.peek() != '(')
+                {
+                    output += operators.pop();
+                }
+                continue;
+            }
+
         }
-        //Когда прошли по всем символам, выкидываем из стека все оставшиеся там операторы в строку
         while (operators.size() > 0)
-            output += operators.pop() + " ";
+            if(operators.peek() != '(' && operators.peek() != ')')
+                output += operators.pop() + " ";
         return output;
     }
     public static double count(String input)
@@ -81,30 +88,28 @@ public class RPN {
                 }
                 temp.push(Double.parseDouble(number));
             }
-            else
-            {
-                if (RPN.isOperator(c))
-                {
+            else {
+                if (RPN.isOperator(c)) {
                     Double a = temp.pop();
                     Double b = temp.pop();
                     switch (RPN.getPriority(c))
                     {
-                        case(2):
+                        case(1):
                         {
                             temp.push(a+b);
                             break;
                         }
-                        case(3):
+                        case(2):
                         {
                             temp.push(b-a);
                             break;
                         }
-                        case(4):
+                        case(3):
                         {
                             temp.push(a*b);
                             break;
                         }
-                        case(5):
+                        case(4):
                         {
                             temp.push(b/a);
                             break;
@@ -121,11 +126,11 @@ public class RPN {
     }
     public static boolean isOperator(char c)
     {
-        return getPriority(c) != 6;
+        return getPriority(c) != 5;
     }
     public static boolean isDelimiter(char c)
     {
-        if (' ' == c || '(' == c || ')' == c)
+        if (' ' == c)
             return true;
         return false;
     }
@@ -133,13 +138,11 @@ public class RPN {
     {
         switch (c)
         {
-            case '(': return 0;
-            case ')': return 1;
-            case '+': return 2;
-            case '-': return 3;
-            case '*': return 4;
-            case '/': return 5;
-            default: return 6;
+            case '+': return 1;
+            case '-': return 2;
+            case '*': return 3;
+            case '/': return 4;
+            default: return 5;
         }
     }
     public static enum  Operator
