@@ -15,10 +15,9 @@ import java.util.jar.JarFile;
 public class TreeMain {
     public ArrayList<JPanel> panels;
     public static void main(String[] args) {
-        String input = "2 3 5 6 7 + + + ";
+        String input = "2 3 * 12 6 / 3 * -";
         BinTree<String> tree =  fillTree(input);
         printTree(tree,1);
-
     }
     class CustomPanel extends JPanel
     {

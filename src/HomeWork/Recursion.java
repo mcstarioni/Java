@@ -29,7 +29,7 @@ public class Recursion
                 if(i == max)
                     count++;
             }
-        }while(i != 0);
+        } while(i != 0);
         return count;
     }
     public static int secondMax(int max1,int max2)
