@@ -1,6 +1,9 @@
 package HomeWork.CalculatorGUI;
 
 import Collections.List.Stack;
+import Collections.Map.Pair;
+
+import java.util.ArrayList;
 
 /**
  * Created by mcstarioni on 15.11.2016.
@@ -71,6 +74,22 @@ public class RPN
                 output += operators.pop() + " ";
         return output;
     }
+    public static Pair<Stack<String>,Stack<Character>> parseToArrayList(String input)
+    {
+        for (int i = 0; i < input.length(); i++) {
+            Character c = input.charAt(i);
+            while (c != ' ') {
+                if(RPN.isOperator(c))
+                {
+                    Pair<Stack<String>,Stack<Character>> result;
+                }
+                else
+                {
+                }
+            }
+        }
+        return new Pair<>();
+    }
     public static double count(String input)
     {
         System.out.println(input);
@@ -126,7 +145,7 @@ public class RPN
     }
     public static boolean isOperator(char c)
     {
-        return getPriority(c) != 5;
+        return getPriority(c) != 6;
     }
     public static boolean isDelimiter(char c)
     {
@@ -142,7 +161,8 @@ public class RPN
             case '-': return 2;
             case '*': return 3;
             case '/': return 4;
-            default: return 5;
+            case '^': return 5;
+            default: return 6;
         }
     }
     public static enum  Operator

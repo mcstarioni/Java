@@ -10,6 +10,12 @@ import java.awt.event.MouseListener;
 public class TetsMouseListener extends JFrame implements MouseListener
 {
 
+    public static void main(String[] args) {
+        for(int i = 1; i < 25; i++)
+        {
+            System.out.println("+(((2-4*((-1)^"+i+"))*sin("+i+"*x))/(pi*"+i+"))");
+        }
+    }
     /**
      * Invoked when the mouse button has been clicked (pressed
      * and released) on a component.
