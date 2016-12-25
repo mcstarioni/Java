@@ -1,35 +1,34 @@
 package Collections.List;
 
+
 import Collections.Collection;
 
 import java.util.Iterator;
-import java.util.Spliterator;
-import java.util.function.Consumer;
 
 /**
  * Created by mcstarioni on 21.10.2016.
  */
 public class DoubleList<T> implements List<T>
 {
-    private Node<T> head;
-    private Node<T> tail;
+    private Node head;
+    private Node tail;
     private int size;
 
     public void add(T element)
     {
         if(size == 0)
         {
-            head.next = new Node<T>(element,tail,head);
+            head.next = new Node(element,tail,head);
             tail.prev = head.next;
         }
         else
         {
-            Node<T> temp = head;
+            Node temp = head;
             while(temp.next != tail)
             {
                 temp = temp.next;
             }
-            temp.next = new Node<T>(element,tail,temp);
+            temp.next = new Node(element,tail,temp);
             tail.prev = temp.next;
         }
         size++;
@@ -42,17 +41,17 @@ public class DoubleList<T> implements List<T>
             System.out.println("\nError: Out of bounds.");
             return;
         }
-        Node<T> temp = head;
+        Node temp = head;
         for (int i = 0; i < index ; i++)
         {
             temp = temp.next;
         }
-        Node<T> inserted = new Node<T>(element,temp.next,temp);
+        Node inserted = new Node(element,temp.next,temp);
         temp.next.prev = inserted;
         temp.next = inserted;
         size++;
     }
-    @Override
+
     public void modifyAt(T element, int index)
     {
         if(indexError(index))
@@ -61,12 +60,11 @@ public class DoubleList<T> implements List<T>
             return;
         }
         int i = 0;
-        Node<T> temp;
+        Node temp;
         for (temp = head; i <= index; temp = temp.next)
             i++;
         temp.element = element;
     }
-    @Override
     public void removeAt(int index)
     {
         if(indexError(index))
@@ -77,8 +75,8 @@ public class DoubleList<T> implements List<T>
         //          node1   node2
         // (H:n,0) (0:1,H) (1:2,0) 2 3 4 5 T
         // (H:n,1) (0:1,H) (1:2,H) 2 3 4 5 T
-        Node<T> node1 = head.next;
-        Node<T> node2;
+        Node node1 = head.next;
+        Node node2;
         for (int i = 0; i < index; i++)
         {
             node1 = node1.next;
@@ -95,7 +93,7 @@ public class DoubleList<T> implements List<T>
     }
     public int search(T object)
     {
-        Node<T> temp = head.next;
+        Node temp = head.next;
         for(int i = 0; i < size; i++)
         {
             if(temp.element == object)
@@ -109,10 +107,13 @@ public class DoubleList<T> implements List<T>
         }
         return -1;
     }
+    public <E extends Collection<T>> void merge(E master, E merged) {
+    }
+
     public DoubleList()
     {
-        head = new Node<T>(null,tail,null);
-        tail = new Node<T>(null,null,head);
+        head = new Node(null,tail,null);
+        tail = new Node(null,null,head);
         size = 0;
     }
 
@@ -124,7 +125,7 @@ public class DoubleList<T> implements List<T>
             return null;
         }
         int i = 0;
-        Node<T> temp;
+        Node temp;
         for (temp = head; i <= index; temp = temp.next)
             i++;
         return temp.element;
@@ -141,7 +142,6 @@ public class DoubleList<T> implements List<T>
         tail.prev = head;
     }
 
-    @Override
     public int size()
     {
         return size;
@@ -151,66 +151,56 @@ public class DoubleList<T> implements List<T>
     {
         return ((index >= size) || (index < 0));
     }
-    @Override
-    public <E extends Collection<T>> void merge(E master, E merged)
-    {
 
-    }
-
-    /**
-     * Returns an iterator over elements of type {@code T}.
-     *
-     * @return an Iterator.
-     */
-    @Override
     public Iterator iterator()
     {
-        return null;
+        return new ListIterator();
     }
 
-    /**
-     * Performs the given action for each element of the {@code Iterable}
-     * until all elements have been processed or the action throws an
-     * exception.  Unless otherwise specified by the implementing class,
-     * actions are performed in the order of iteration (if an iteration order
-     * is specified).  Exceptions thrown by the action are relayed to the
-     * caller.
-     *
-     * @param action The action to be performed for each element
-     * @throws NullPointerException if the specified action is null
-     * @implSpec <p>The default implementation behaves as if:
-     * <pre>{@code
-     *     for (T t : this)
-     *         action.accept(t);
-     * }</pre>
-     * @since 1.8
-     */
-    @Override
-    public void forEach(Consumer action)
+    private class ListIterator implements Iterator<T>
     {
+        Node next;
+        public ListIterator()
+        {
+            next = head.next;
 
+        }
+        @Override
+        public boolean hasNext() {
+            return next != tail;
+        }
+
+        @Override
+        public T next() {
+            if (hasNext())
+            {
+                T value = next.element;
+                next = next.next;
+                return value;
+
+            }else
+            {
+                System.out.println("Error. Iterator out of bounds");
+                return null;
+            }
+        }
     }
-
-    /**
-     * Creates a {@link Spliterator} over the elements described by this
-     * {@code Iterable}.
-     *
-     * @return a {@code Spliterator} over the elements described by this
-     * {@code Iterable}.
-     * @implSpec The default implementation creates an
-     * <em><a href="Spliterator.html#binding">early-binding</a></em>
-     * spliterator from the iterable's {@code Iterator}.  The spliterator
-     * inherits the <em>fail-fast</em> properties of the iterable's iterator.
-     * @implNote The default implementation should usually be overridden.  The
-     * spliterator returned by the default implementation has poor splitting
-     * capabilities, is unsized, and does not report any spliterator
-     * characteristics. Implementing classes can nearly always provide a
-     * better implementation.
-     * @since 1.8
-     */
-    @Override
-    public Spliterator spliterator()
+    private class Node
     {
-        return null;
+        T element;
+        Node next;
+        Node prev;
+        Node(T element, Node next)
+        {
+            this.element = element;
+            this.next = next;
+            prev = null;
+        }
+        Node(T element, Node next, Node prev)
+        {
+            this.element = element;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }

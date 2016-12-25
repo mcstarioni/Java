@@ -5,7 +5,7 @@ import Collections.Collection;
 /**
  * Created by mcstarioni on 22.10.2016.
  */
-public interface List<T> extends Collection
+public interface List<T> extends Collection<T>
 {
     public  void add(T element);
     public  void add(T element, int index);

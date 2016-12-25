@@ -4,6 +4,7 @@ import Collections.Collection;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 
@@ -12,26 +13,26 @@ import java.util.function.Consumer;
  */
 public class SingleList<T> implements List<T>
 {
-    private Node<T> head;
+    private Node head;
     private int size = 0;
     public SingleList()
     {
-        head = new Node<T>(null,null);
+        head = new Node(null,null);
     }
     public void add(T element)
     {
         if(head.next == null)
         {
-            head.next = new Node<T>(element,null);
+            head.next = new Node(element,null);
         }
         else
         {
-            Node<T> temp = head.next;
-            while(temp.hasNext())
+            Node temp = head.next;
+            while(temp.next != null)
             {
                 temp = temp.next;
             }
-            temp.next = new Node<T>(element,null);
+            temp.next = new Node(element,null);
         }
         size++;
     }
@@ -43,14 +44,14 @@ public class SingleList<T> implements List<T>
             System.out.println("\nError: Out of bounds.");
             return;
         }
-        Node<T> temp = head;
+        Node temp = head;
         for (int i = 0; i < index ; i++)
         {
             temp = temp.next;
         }
-        if(!temp.hasNext())
+        if(temp.next != null)
             return;
-        temp.next = new Node<T>(element,temp.next);
+        temp.next = new Node(element,temp.next);
         size++;
     }
 
@@ -63,7 +64,7 @@ public class SingleList<T> implements List<T>
             return;
         }
         int i = 0;
-        Node<T> temp;
+        Node temp;
         for (temp = head; i <= index; temp = temp.next)
             i++;
         temp.element = element;
@@ -77,8 +78,8 @@ public class SingleList<T> implements List<T>
             System.out.println("\nError: Out of bounds.");
             return;
         }
-        Node<T> node1 = head;
-        Node<T> node2 = head.next;
+        Node node1 = head;
+        Node node2 = head.next;
         for (int i = 0; i < index; i++)
         {
             node1 = node1.next;
@@ -95,7 +96,7 @@ public class SingleList<T> implements List<T>
     }
     public int search(T object)
     {
-        Node<T> temp = head.next;
+        Node temp = head.next;
         for(int i = 0; i < size; i++)
         {
             //System.out.println(temp.toString());
@@ -119,7 +120,7 @@ public class SingleList<T> implements List<T>
             return null;
         }
         int i = 0;
-        Node<T> temp;
+        Node temp;
         for (temp = head; i <= index; temp = temp.next)
             i++;
         return temp.element;
@@ -127,7 +128,7 @@ public class SingleList<T> implements List<T>
 
     public boolean isEmpty()
     {
-        return !head.hasNext();
+        return size == 0;
     }
 
     public void clear()
@@ -135,11 +136,11 @@ public class SingleList<T> implements List<T>
         head.next = null;
         size = 0;
     }
-    public  void reverse(Node<T> start)
+    public  void reverse(Node start)
     {
         if(start.next == null)
         {
-            head = new Node<T>(null,start);
+            head = new Node(null,start);
         }else
         {
             reverse(start.next);
@@ -151,7 +152,7 @@ public class SingleList<T> implements List<T>
     {
 
     }
-    public Node<T> getHead(){return head;}
+    public Node getHead(){return head;}
 
     public int size()
     {
@@ -161,7 +162,7 @@ public class SingleList<T> implements List<T>
     public SingleList<T> copy()
     {
         SingleList<T> list = new SingleList<T>();
-        for (Node<T> temp = head; temp != null; temp = temp.next)
+        for (Node temp = head; temp != null; temp = temp.next)
         {
             list.add(temp.element);
         }
@@ -178,56 +179,43 @@ public class SingleList<T> implements List<T>
      *
      * @return an Iterator.
      */
-    @Override
-    public Iterator iterator()
-    {
-        return null;
+    public Iterator<T> iterator() {
+        return new ListIterator();
     }
 
-    /**
-     * Performs the given action for each element of the {@code Iterable}
-     * until all elements have been processed or the action throws an
-     * exception.  Unless otherwise specified by the implementing class,
-     * actions are performed in the order of iteration (if an iteration order
-     * is specified).  Exceptions thrown by the action are relayed to the
-     * caller.
-     *
-     * @param action The action to be performed for each element
-     * @throws NullPointerException if the specified action is null
-     * @implSpec <p>The default implementation behaves as if:
-     * <pre>{@code
-     *     for (T t : this)
-     *         action.accept(t);
-     * }</pre>
-     * @since 1.8
-     */
-    @Override
-    public void forEach(Consumer action)
-    {
+    private class ListIterator implements Iterator<T> {
+        Node next;
+        public ListIterator()
+        {
+            next = head.next;
 
+        }
+        public boolean hasNext() {
+            return next != null;
+        }
+        public T next() {
+            if (hasNext())
+            {
+                T value = next.element;
+                next = next.next;
+                return value;
 
+            }else
+            {
+                System.out.println("Error. Iterator out of bounds");
+                return null;
+            }
+        }
     }
-
-    /**
-     * Creates a {@link Spliterator} over the elements described by this
-     * {@code Iterable}.
-     *
-     * @return a {@code Spliterator} over the elements described by this
-     * {@code Iterable}.
-     * @implSpec The default implementation creates an
-     * <em><a href="Spliterator.html#binding">early-binding</a></em>
-     * spliterator from the iterable's {@code Iterator}.  The spliterator
-     * inherits the <em>fail-fast</em> properties of the iterable's iterator.
-     * @implNote The default implementation should usually be overridden.  The
-     * spliterator returned by the default implementation has poor splitting
-     * capabilities, is unsized, and does not report any spliterator
-     * characteristics. Implementing classes can nearly always provide a
-     * better implementation.
-     * @since 1.8
-     */
-    @Override
-    public Spliterator spliterator()
+    private class Node
     {
-        return null;
+        protected T element;
+        protected Node next;
+        Node(T element,Node next)
+        {
+            this.element = element;
+            this.next = next;
+        }
+        //protected boolean hasNext(){return this.next != null;}
     }
 }

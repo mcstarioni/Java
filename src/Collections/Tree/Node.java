@@ -3,21 +3,33 @@ package Collections.Tree;
 /**
  * Created by mcstarioni on 30.11.2016.
  */
-public class Node<T>
-{
-    int level;
-    T value;
-    Node<T> left;
-    Node<T> right;
-    public Node(T value, Node<T> left, Node<T> right,int level)
-    {
+public class Node<T> {
+    protected int successors;
+    protected int level;
+    protected T value;
+    protected Node<T> left;
+    protected Node<T> right;
+
+    public Node(T value, Node<T> left, Node<T> right,int level) {
         this.value = value;
+        this.level = level;
         this.left = left;
         this.right = right;
-        this.level = level;
-
+    }
+    public boolean isBalanced() {
+        return false;
+    }
+    public boolean isLeaf() {
+        if (left == null && right == null) return true;
+        return false;
     }
 
+    public void add(T element) {
+        if (this.isBalanced()) {
+            left.add(element);
+        }
+
+    }
     public T getValue() {
         return value;
     }

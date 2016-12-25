@@ -5,37 +5,23 @@ package Collections.Tree;
  */
 public class BinTree<T>
 {
-    T value;
-    BinTree<T> left;
-    BinTree<T> right;
-    public BinTree(T value, BinTree<T> left, BinTree<T> right)
-    {
-        this.value = value;
-        this.left = left;
-        this.right = right;
-    }
+    int depth;
+    int bottom;
+    Node<T> head;
 
-    public T getValue() {
-        return value;
+    public BinTree() {
+        head = new Node<T>(null, null, null,0);
+        depth = 0;
     }
-
-    public void setValue(T value) {
-        this.value = value;
-    }
-
-    public BinTree<T> getLeft() {
-        return left;
-    }
-
-    public void setLeft(BinTree<T> left) {
-        this.left = left;
-    }
-
-    public BinTree<T> getRight() {
-        return right;
-    }
-
-    public void setRight(BinTree<T> right) {
-        this.right = right;
+    public void add(T element){
+        if(head.value == null)
+        {
+            head.value = element;
+        }
+        else
+        {
+            //while()
+        }
     }
 }
+

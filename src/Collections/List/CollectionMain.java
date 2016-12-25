@@ -1,4 +1,8 @@
 package Collections.List;
+
+import java.util.Iterator;
+import java.util.function.Consumer;
+
 /**
  * Created by mcstarioni on 20.10.2016.
  */
@@ -85,18 +89,11 @@ public class CollectionMain
     }
     public static void main(String[] args)
     {
-
-        List<Integer> list = new DoubleList<Integer>();
-        Integer a = 56456;
-        for (Integer i = 0; i < 10; i++)
-        {
+        DoubleList<Integer> list = new DoubleList<>();
+        for (int i = 0; i < 10; i++) {
             list.add(i);
         }
-        list.modifyAt(a,3);
-        listPrintTest(list);
-        System.out.println(list.search(a));
-        list.removeObj(a);
-        listPrintTest(list);
+        list.forEach((Integer i)-> System.out.print(i+" "));
 //        List<MyStr> list = new DoubleList<MyStr>();
 //        listAddTest(14,list);
 //        listPrintTest(list);
