@@ -167,7 +167,7 @@ public class DoubleList<T> implements List<T>
         }
         @Override
         public boolean hasNext() {
-            return next != tail;
+            return next != tail && size != 0;
         }
 
         @Override

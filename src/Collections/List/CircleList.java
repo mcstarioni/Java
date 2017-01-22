@@ -11,7 +11,7 @@ import java.util.function.Consumer;
  */
 public class CircleList<T> implements List<T>,Iterable<T>
 {
-    public Node head;
+    private Node head;
     private int size;
     public CircleList()
     {

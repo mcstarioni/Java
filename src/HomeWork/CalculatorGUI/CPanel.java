@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 /**
  * Created by mcstarioni on 15.11.2016.
@@ -58,11 +59,17 @@ public class CPanel extends JPanel implements ActionListener,KeyListener{
         {
             if(rpn.isSelected())
             {
-                text.setText(""+RPN.count(text.getText()));
+                String[] request = text.getText().split(" ");
+                ArrayList<String> temp = new ArrayList<>(request.length);
+                for(String word:request)
+                {
+                    temp.add(word);
+                }
+                text.setText(""+RPN.count(temp));
             }
             else
             {
-                text.setText(""+RPN.getRPN(text.getText()));
+                text.setText(""+RPN.calculate(text.getText()));
                 rpn.setSelected(true);
             }
         }
