@@ -10,6 +10,7 @@ public class DZ1
     public static int[] destinationCapacity = {18,27,42,15,26};
     public static int[] routesCost = {6,5,9,7,5,7,3,1,1,7,1,2,9,8,1,4,9,7,1};
     public static int totalCapacity;
+
     static class Node
     {
         int number;
