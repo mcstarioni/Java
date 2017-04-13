@@ -7,6 +7,7 @@ import java.util.LinkedList;
 /**
  * Created by mcstarioni on 27.02.2017.
  */
+//hello
 public class MyHashTable<K extends Comparable,V> implements Map<K,V>
 {
     private ArrayList<ItemList> items;
@@ -57,7 +58,7 @@ public class MyHashTable<K extends Comparable,V> implements Map<K,V>
     {
         return items.get(key.hashCode()).contains(key);
     }
-    public void setAt(K key, V value)
+    public void set(K key, V value)
     {
         int index = getIndex(key.hashCode());
         Item item;
@@ -90,22 +91,6 @@ public class MyHashTable<K extends Comparable,V> implements Map<K,V>
         {
             this.key = key;
             this.value = value;
-        }
-        public K getKey()
-        {
-            return key;
-        }
-        public V getValue()
-        {
-            return value;
-        }
-        public void setValue(V value)
-        {
-            this.value = value;
-        }
-        public void setKey(K key)
-        {
-            this.key = key;
         }
     }
     private class ItemList
@@ -164,7 +149,7 @@ public class MyHashTable<K extends Comparable,V> implements Map<K,V>
         hash.add("Hello",100);
         hash.add(" world!",120);
         System.out.println(hash.get("Hello")+hash.get(" world!"));
-        hash.setAt("Hello",-20);
+        hash.set("Hello",-20);
         System.out.println(hash.get("Hello")+hash.get(" world!"));
         hash.remove("Hello");
         System.out.println(hash.get("Hello"));
