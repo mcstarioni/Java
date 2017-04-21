@@ -15,7 +15,7 @@ import java.util.jar.JarFile;
 /**
  * Created by mcstarioni on 30.11.2016.
  */
-public class BinaryTree<K extends Comparable,V> implements Iterable<V>
+public class BinaryTree<K extends Comparable,V> //implements Iterable<V>
 {
     Node root;
     int size = 0;
@@ -291,9 +291,13 @@ public class BinaryTree<K extends Comparable,V> implements Iterable<V>
         tree.add(100,"Hello");
         tree.add(120,"world");
         tree.add(90,"brave");
-        tree.add(107,"I love java");
+        tree.add(107,"I");
+        tree.add(108,"love");
+        tree.add(109,"Java");
         //System.out.println(tree.get("1"));
         //tree.print();
+        tree.printTree();
+        tree.remove(100);
         tree.printTree();
         //System.out.println(tree.root.value);
         //tree.remove("1");
