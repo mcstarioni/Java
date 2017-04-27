@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by mcstarioni on 20.04.2017.
  */
-public class Heap<K extends Comparable,V>
+public class Heap<K extends Comparable,V> extends BinaryTree<K,V>
 {
     int size = 0;
     int lastIndex = 0;
