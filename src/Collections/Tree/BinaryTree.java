@@ -15,6 +15,8 @@ public abstract class BinaryTree<K,V>
         V value;
         Node left;
         Node right;
+        Node parent = null;
+        Node(){}
         Node(K key, V value)
         {
             this.key = key;
