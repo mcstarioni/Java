@@ -20,7 +20,7 @@ public class RPN
 //            System.out.println(test[i] + " = "+RPN.calculate(test[i]));
 //        }
 //         72 - 2*6^2
-        String infixTest = "8*9 - 2*6^(4^(1/2))";
+        String infixTest = "sin(Pi)^2 + cos(Pi)^2";
         //String infixTest = "-1+1";
         String test[] = {"PI","2","/","sin","asin","2","*"};
         String testCombined = "";
@@ -44,7 +44,7 @@ public class RPN
     {
         System.out.println(input + " length: "+input.length());
         ArrayList<String> result = new ArrayList<>(input.length());
-        Stack<Character> operators = new Stack<>();
+        Stack<String> operators = new Stack<>();
         //java.util.Stack<Character> operators = new java.util.Stack<>();
         int braces = 0;
         for (int i = 0; i < input.length(); i++)
@@ -77,23 +77,50 @@ public class RPN
                 }
                 result.add(digits.toString());
             }
-            if (RPN.isOperator(c))
+            if(Character.isLetter(c))
+            {
+                StringBuilder letters = new StringBuilder();
+                do
+                {
+                    letters.append(c);
+                    if(i < input.length() - 1)
+                    {
+                        i++;
+                        c = input.charAt(i);
+                    }else
+                    {
+                        break;
+                    }
+                }while(Character.isLetter(c));
+                String word = letters.toString();
+                if(word.equals("pi") || word.equals("Pi") || word.equals("PI"))
+                {
+                    result.add("PI");
+                }else
+                {
+                    if(isFunction(word))
+                    {
+                        operators.push(word);
+                    }
+                }
+            }
+            if (RPN.isOperator(""+c))
             {
                 if (!operators.isEmpty())
                 {
-                    int priority = RPN.getPriority(c);
-                    while(operators.peek() != '(' && RPN.getPriority(operators.peek()) >= priority)
+                    int priority = RPN.getPriority(""+c);
+                    while(!operators.peek().equals("(") && RPN.getPriority(operators.peek()) >= priority)
                     {
-                        result.add(operators.pop().toString());
+                        result.add(operators.pop());
                         if (operators.isEmpty())
                         {
                             break;
                         }
                     }
-                    operators.push(c);
+                    operators.push(""+c);
                 } else
                 {
-                    operators.push(c);
+                    operators.push(""+c);
                 }
                 System.out.print("Result is = ");
                 result.forEach((number)-> System.out.print(number+" "));
@@ -104,7 +131,7 @@ public class RPN
             {
                 if (c == '(')
                 {
-                    operators.push(c);
+                    operators.push(""+c);
                     braces++;
                 } else
                 {
@@ -112,7 +139,7 @@ public class RPN
                     {
                         while (!operators.isEmpty())
                         {
-                            if (operators.peek() == '(')
+                            if (operators.peek().equals("("))
                             {
                                 braces--;
                                 operators.pop();
@@ -120,7 +147,7 @@ public class RPN
                             }
 //                        char out = operators.peek();
 //                        System.out.println(out);
-                            result.add(operators.pop().toString());
+                            result.add(operators.pop());
                         }
                     }
                 }
@@ -130,7 +157,7 @@ public class RPN
         {
 //            char out = operators.peek();
 //            System.out.println(out);
-            result.add(operators.pop().toString());
+            result.add(operators.pop());
         }
         return result;
     }
@@ -150,10 +177,10 @@ public class RPN
                 temp.push(Double.parseDouble(value));
             }
             else {
-                if (RPN.isOperator(c)) {
+                if (RPN.isOperator(value)) {
                     Double a = temp.pop();
                     Double b = temp.pop();
-                    switch (RPN.getOperation(c))
+                    switch (RPN.getOperation(value))
                     {
                         case(1):
                         {
@@ -240,16 +267,9 @@ public class RPN
     // 2 + 2*2*cos()
     public static boolean isFunction(String s)
     {
-        try
-        {
-            getFunction(s);
-            return true;
-        }catch (Exception e)
-        {
-            return false;
-        }
+        return (getFunction(s) != -1);
     }
-    public static int getFunction(String s) throws Exception
+    public static int getFunction(String s)
     {
         switch (s)
         {
@@ -259,14 +279,27 @@ public class RPN
             case "ctg":return 3;
             case "acos":return 4;
             case "asin":return 5;
-            default: throw new Exception("Invalid function name");
         }
+        return -1;
+    }
+    public static String getFunction(int n)
+    {
+        switch (n)
+        {
+            case 0: return "sin";
+            case 1: return "cos";
+            case 2: return "tg";
+            case 3: return "ctg";
+            case 4: return "acos";
+            case 5: return "asin";
+        }
+        return "";
     }
     public static boolean isDigit(char c)
     {
         return (c >= '0' && c <= '9');
     }
-    public static boolean isOperator(char c)
+    public static boolean isOperator(String c)
     {
         return getOperation(c) != 6;
     }
@@ -276,27 +309,29 @@ public class RPN
             return true;
         return false;
     }
-    public static int getPriority(char c)
+    public static int getPriority(String c)
     {
         switch (c)
         {
-            case '+': return 1;
-            case '-': return 1;
-            case '*': return 2;
-            case '/': return 2;
-            case '^': return 3;
-            default: return 5;
+            case "+": return 1;
+            case "-": return 1;
+            case "*": return 2;
+            case "/": return 2;
+            case "^": return 3;
         }
+        if(isFunction(c))
+            return 4;
+        return 5;
     }
-    public static int getOperation(char c)
+    public static int getOperation(String c)
     {
         switch (c)
         {
-            case '+': return 1;
-            case '-': return 2;
-            case '*': return 3;
-            case '/': return 4;
-            case '^': return 5;
+            case "+": return 1;
+            case "-": return 2;
+            case "*": return 3;
+            case "/": return 4;
+            case "^": return 5;
             default: return 6;
         }
     }

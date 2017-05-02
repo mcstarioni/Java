@@ -81,7 +81,7 @@ public class CPanel extends JPanel implements ActionListener,KeyListener{
     public void keyTyped(KeyEvent e) {
         char c = e.getKeyChar();
         System.out.println(c);
-        if(Character.isDigit(c) || RPN.isOperator(c) || RPN.isDelimiter(c)) {
+        if(Character.isDigit(c) || RPN.isOperator(""+c) || RPN.isDelimiter(c)) {
             text.setText(text.getText() + e.getKeyChar());
         }
         else
