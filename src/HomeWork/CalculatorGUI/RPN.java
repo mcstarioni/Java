@@ -1,6 +1,7 @@
 package HomeWork.CalculatorGUI;
 
 import Collections.List.Stack;
+import Collections.Map.Map;
 import Collections.Map.Pair;
 
 import java.util.ArrayList;
@@ -18,10 +19,10 @@ public class RPN
 //            System.out.println(rpnTest[i] + " = " + RPN.getRPN());
 //            System.out.println(test[i] + " = "+RPN.calculate(test[i]));
 //        }
-//
+//         72 - 2*6^2
         String infixTest = "8*9 - 2*6^(4^(1/2))";
         //String infixTest = "-1+1";
-        String test[] = {"57","3","5","*","6","2","^","2","*","-","+"};
+        String test[] = {"PI","2","/","sin","asin","2","*"};
         String testCombined = "";
         for (String s:test)
         {
@@ -56,10 +57,10 @@ public class RPN
             char c = input.charAt(i);
             if(RPN.isDigit(c))
             {
-                String digits = "";
+                StringBuilder digits = new StringBuilder();
                 do
                 {
-                    digits += c;
+                    digits.append(c);
                     if(i < input.length() - 1)
                     {
                         i++;
@@ -69,7 +70,12 @@ public class RPN
                         break;
                     }
                 }while(RPN.isDigit(c) || c == '.');
-                result.add(digits);
+                if(Math.abs(Double.parseDouble(digits.toString())-Math.PI)<0.1)
+                {
+                    digits.delete(0,digits.length());
+                    digits.append("PI");
+                }
+                result.add(digits.toString());
             }
             if (RPN.isOperator(c))
             {
@@ -119,7 +125,6 @@ public class RPN
                     }
                 }
             }
-
         }
         while (!operators.isEmpty())
         {
@@ -129,6 +134,9 @@ public class RPN
         }
         return result;
     }
+    //2 + 2 * cos(3*x + 2)
+    //2     +
+    //2 2 3 x * 2 + cos * +
     public static double count(ArrayList<String> input)
     {
         Stack<Double> temp = new Stack<>();
@@ -173,10 +181,86 @@ public class RPN
                             break;
                         }
                     }
+                }else
+                {
+                    if(isFunction(value))
+                    {
+                        Double a = temp.pop();
+                        try{
+                            switch (getFunction(value))
+                            {
+                                case 0:
+                                {
+                                    temp.push(Math.sin(a));
+                                    break;
+                                }
+                                case 1:
+                                {
+                                    temp.push(Math.cos(a));
+                                    break;
+                                }
+                                case 2:
+                                {
+                                    temp.push(Math.tan(a));
+                                    break;
+                                }
+                                case 3:
+                                {
+                                    temp.push(1/Math.tan(a));
+                                    break;
+                                }
+                                case 4:
+                                {
+                                    temp.push(Math.acos(a));
+                                    break;
+                                }
+                                case 5:
+                                {
+                                    temp.push(Math.asin(a));
+                                    break;
+                                }
+                            }
+                        }catch(Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }else
+                    {
+                        if (value.equals("PI"))
+                        {
+                            temp.push(Math.PI);
+                        }
+                    }
                 }
             }
         }
+        System.out.println();
         return temp.peek();
+    }
+    // 2 + 2*2*cos()
+    public static boolean isFunction(String s)
+    {
+        try
+        {
+            getFunction(s);
+            return true;
+        }catch (Exception e)
+        {
+            return false;
+        }
+    }
+    public static int getFunction(String s) throws Exception
+    {
+        switch (s)
+        {
+            case "sin":return 0;
+            case "cos":return 1;
+            case "tg":return 2;
+            case "ctg":return 3;
+            case "acos":return 4;
+            case "asin":return 5;
+            default: throw new Exception("Invalid function name");
+        }
     }
     public static boolean isDigit(char c)
     {
@@ -201,8 +285,6 @@ public class RPN
             case '*': return 2;
             case '/': return 2;
             case '^': return 3;
-            //case '(': return 4;
-            //case ')': return 4;
             default: return 5;
         }
     }

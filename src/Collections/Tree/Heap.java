@@ -56,7 +56,6 @@ public class Heap<K extends Comparable,V> extends BinaryTree<K,V>
             }
             heapify(inserted);
         }
-
         size++;
         if(size == 2*levelSize-1){
             levelSize *= 2;
@@ -64,6 +63,41 @@ public class Heap<K extends Comparable,V> extends BinaryTree<K,V>
 
         }
     }
+    public V removeFirst()
+    {
+        Node first = new Node(root.key,root.value);
+        Node localRoot = root;
+        while(localRoot.left != null || localRoot.right != null);
+        {
+            if (localRoot.left.key.compareTo(localRoot.right.key) >= 0)
+            {
+                localRoot.key = localRoot.left.key;
+                localRoot.value = localRoot.left.value;
+                localRoot = localRoot.left;
+//                current = localRoot.left;
+//                current.right = localRoot.right;
+//                localRoot.right.parent = current;
+            } else
+            {
+                localRoot.key = localRoot.right.key;
+                localRoot.value = localRoot.right.value;
+                localRoot = localRoot.right;
+//
+//                current = localRoot.right;
+//                current.left = localRoot.left;
+//                localRoot.left.parent = current;
+            }
+        }
+        return null;
+    }
+//              1
+//          /       \
+//         2          3
+//       /   \       /   \
+//      4     5     6     7
+//    /  \   / \   / \   / \
+//   8   9  10 11 12 13 14 15
+
     public void printNodes(Node start)
     {
         Node temp = start;
@@ -135,5 +169,11 @@ public class Heap<K extends Comparable,V> extends BinaryTree<K,V>
         //heap.printNodes(heap.root);
         heap.add(60,"");
         heap.printTree();
+    }
+    private void testNode()
+    {
+        Node a = new Node();
+        a.left = new Node();
+        //b = a.left;
     }
 }
