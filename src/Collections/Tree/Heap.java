@@ -6,6 +6,7 @@ public class Heap<K extends Comparable,V> extends BinaryTree<K,V>
 {
     private int levelSize = 1;
     private int filledSize = 0;
+    private Node last;
     Heap()
     {
         root = null;
@@ -17,6 +18,7 @@ public class Heap<K extends Comparable,V> extends BinaryTree<K,V>
         {
             root = inserted;
             root.parent = null;
+            last = root;
         }
         else
         {
@@ -55,6 +57,7 @@ public class Heap<K extends Comparable,V> extends BinaryTree<K,V>
                 currentSize /= 2;
             }
             heapify(inserted);
+            last = inserted;
         }
         size++;
         if(size == 2*levelSize-1){
@@ -63,40 +66,21 @@ public class Heap<K extends Comparable,V> extends BinaryTree<K,V>
 
         }
     }
-    public V removeFirst()
+    public Node popFirst()
     {
         Node first = new Node(root.key,root.value);
-        Node localRoot = root;
-        while(localRoot.left != null || localRoot.right != null);
+        if(last != root)
         {
-            if (localRoot.left.key.compareTo(localRoot.right.key) >= 0)
-            {
-                localRoot.key = localRoot.left.key;
-                localRoot.value = localRoot.left.value;
-                localRoot = localRoot.left;
-//                current = localRoot.left;
-//                current.right = localRoot.right;
-//                localRoot.right.parent = current;
-            } else
-            {
-                localRoot.key = localRoot.right.key;
-                localRoot.value = localRoot.right.value;
-                localRoot = localRoot.right;
-//
-//                current = localRoot.right;
-//                current.left = localRoot.left;
-//                localRoot.left.parent = current;
-            }
+            if (last.parent.left == last)
+                last.parent.left = null;
+            else
+                last.parent.right = null;
+            swap(root,last);
+            downHeapify();
         }
-        return null;
+        size--;
+        return first;
     }
-//              1
-//          /       \
-//         2          3
-//       /   \       /   \
-//      4     5     6     7
-//    /  \   / \   / \   / \
-//   8   9  10 11 12 13 14 15
 
     public void printNodes(Node start)
     {
@@ -118,6 +102,83 @@ public class Heap<K extends Comparable,V> extends BinaryTree<K,V>
             swap(inserted.parent,inserted);
             inserted = inserted.parent;
         }
+    }
+    public void downHeapify()
+    {
+        Node inserted = root;
+        while(inserted.left != null || inserted.right != null)
+        {
+            Node local;
+            if(inserted.left != null && inserted.right != null)
+            {
+                if(inserted.left.key.compareTo(inserted.key) > 0 || inserted.right.key.compareTo(inserted.key) > 0)
+                    local = (inserted.left.key.compareTo(inserted.right.key) > 0) ? inserted.left : inserted.right;
+                else
+                    break;
+            }else
+            {
+                if(inserted.right != null)
+                {
+                    if(inserted.right.key.compareTo(inserted.key) > 0)
+                        local = inserted.right;
+                    else
+                        break;
+                }else
+                {
+                    if(inserted.left.key.compareTo(inserted.key) > 0)
+                        local = inserted.left;
+                    else
+                        break;
+                }
+            }
+            swap(inserted,local);
+        }
+    }
+//              1
+//          /       \
+//         2          3
+//       /   \       /   \
+//      4     5     6     7
+//    /  \   / \   / \   / \
+//   8   9  10 11 12 13 14 15
+    /*
+        5 level = 3
+        1 = 5 - 4
+
+     */
+    public final Node get(int position)
+    {
+        if(position == 1)
+            return root;
+        else
+        {
+            Node temp = root;
+            int level = getLevel(position) - 1;
+            int levelCount = (int)Math.pow(2,level);
+            int i = position - levelCount;
+            while (true)
+            {
+                levelCount /=2;
+                if (i < levelCount)
+                {
+                    temp = temp.left;
+                } else
+                    temp = temp.right;
+                level--;
+                if (level == 0)
+                    return temp;
+            }
+
+        }
+    }
+    public int getLevel(int number)
+    {
+        int i = 0;
+        while(number > Math.pow(2,i))
+        {
+            i++;
+        }
+        return i;
     }
     public void swap(Node par, Node ans)
     {
@@ -167,7 +228,11 @@ public class Heap<K extends Comparable,V> extends BinaryTree<K,V>
             heap.add(i,"");
         }
         //heap.printNodes(heap.root);
+        heap.printTree();
         heap.add(60,"");
+        heap.printTree();
+        System.out.println(heap.get(5).key);
+        System.out.println(heap.popFirst().key);
         heap.printTree();
     }
     private void testNode()

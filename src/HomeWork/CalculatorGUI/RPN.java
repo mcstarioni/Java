@@ -12,16 +12,7 @@ import java.util.ArrayList;
 public class RPN
 {
     public static void main(String[] args) {
-//        String[] rpnTest = {"2 2 +","3 3 *", "4 4   -"};
-//        String[] test = {"2 +3-5","4*2*3-  12*2","1/2*(2+3*5 +   1)-((3+2)*3 - 6)"};
-//        for (int i = 0; i < test.length; i++)
-//        {
-//            System.out.println(rpnTest[i] + " = " + RPN.getRPN());
-//            System.out.println(test[i] + " = "+RPN.calculate(test[i]));
-//        }
-//         72 - 2*6^2
         String infixTest = "sin(Pi)^2 + cos(Pi)^2";
-        //String infixTest = "-1+1";
         String test[] = {"PI","2","/","sin","asin","2","*"};
         String testCombined = "";
         for (String s:test)
@@ -33,7 +24,6 @@ public class RPN
         {
             array.add(s);
         }
-        //System.out.println(""+ RPN.count(array));
         System.out.println(" = "+RPN.calculate(infixTest));
     }
     public static double calculate(String infixInput)
@@ -45,13 +35,12 @@ public class RPN
         System.out.println(input + " length: "+input.length());
         ArrayList<String> result = new ArrayList<>(input.length());
         Stack<String> operators = new Stack<>();
-        //java.util.Stack<Character> operators = new java.util.Stack<>();
         int braces = 0;
         for (int i = 0; i < input.length(); i++)
         {
-            System.out.print("Result is = ");
+            System.out.print("Result:  ");
             result.forEach((number)-> System.out.print(number+" "));
-            System.out.print("\nOperators stack = ");
+            System.out.print("\nOperators:  ");
             operators.forEach((operator) -> System.out.print(operator + " "));
             System.out.println();
             char c = input.charAt(i);
@@ -122,11 +111,6 @@ public class RPN
                 {
                     operators.push(""+c);
                 }
-                System.out.print("Result is = ");
-                result.forEach((number)-> System.out.print(number+" "));
-                System.out.print("\nOperators stack = ");
-                operators.forEach((operator) -> System.out.print(operator + " "));
-                System.out.println();
             } else
             {
                 if (c == '(')
@@ -145,8 +129,6 @@ public class RPN
                                 operators.pop();
                                 break;
                             }
-//                        char out = operators.peek();
-//                        System.out.println(out);
                             result.add(operators.pop());
                         }
                     }
@@ -155,15 +137,10 @@ public class RPN
         }
         while (!operators.isEmpty())
         {
-//            char out = operators.peek();
-//            System.out.println(out);
             result.add(operators.pop());
         }
         return result;
     }
-    //2 + 2 * cos(3*x + 2)
-    //2     +
-    //2 2 3 x * 2 + cos * +
     public static double count(ArrayList<String> input)
     {
         Stack<Double> temp = new Stack<>();
