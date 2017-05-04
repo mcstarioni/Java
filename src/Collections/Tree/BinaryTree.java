@@ -5,76 +5,126 @@ import Collections.List.Stack;
 /**
  * Created by mcstarioni on 27.04.2017.
  */
-public abstract class BinaryTree<K,V>
+public class BinaryTree<K,V> extends Tree<K,V>
 {
-    protected Node root;
-    protected int size = 0;
-    protected class Node
+    protected int levelSize = 1;
+    protected int filledSize = 0;
+    protected Node last;
+    protected Function function1 = (Node)->{};
+    protected Function function2 = (Node)->{};
+    public BinaryTree()
     {
-        K key;
-        V value;
-        Node left;
-        Node right;
-        Node parent = null;
-        Node(){}
-        Node(K key, V value)
-        {
-            this.key = key;
-            this.value = value;
-            left = null;
-            right = null;
-        }
+        root = null;
     }
-    public void printTree()
+    public void add(K key, V value)
     {
-        Stack<Node> global = new Stack<>();
-        global.push(root);
-        int spaces = 32;
-        boolean isRowEmpty = false;
-        for (int i = 0; i < spaces; i++)
+        Node inserted = new Node(key,value);
+        if(size == 0)
         {
-            System.out.print('.');
+            root = inserted;
+            root.parent = null;
+            last = root;
         }
-        System.out.println();
-        while(!isRowEmpty )
+        else
         {
-            Stack<Node> local = new Stack<>();
-            isRowEmpty = true;
-            for (int i = 0; i < spaces; i++)
+            int i = Math.abs(size - filledSize);
+            Node current = root;
+            int currentSize = levelSize/2;
+            while(true)
             {
-                System.out.print(' ');
-            }
-            while (!global.isEmpty())
-            {
-                Node temp = global.pop();
-                if(temp != null)
+                if(i < currentSize)
                 {
-                    System.out.print(temp.key.toString() +":"+temp.value.toString());
-                    local.push(temp.left);
-                    local.push(temp.right);
-                    if(temp.left != null || temp.right != null)
+                    if(current.left != null)
                     {
-                        isRowEmpty = false;
+                        current = current.left;
+                    }
+                    else
+                    {
+                        inserted.parent = current;
+                        current.left = inserted;
+                        break;
                     }
                 }
                 else
                 {
-                    System.out.print("_ _");
-                    local.push(null);
-                    local.push(null);
+                    if(current.right != null)
+                    {
+                        current = current.right;
+                    }
+                    else
+                    {
+                        inserted.parent = current;
+                        current.right = inserted;
+                        break;
+                    }
+                    i -= currentSize;
                 }
-                for (int i = 0; i < spaces*2-2; i++)
-                {
-                    System.out.print(' ');
-                }
+                currentSize /= 2;
             }
-            System.out.println();
-            spaces = spaces/2;
-            while(!local.isEmpty())
+            function1.heapify(inserted);
+            last = inserted;
+        }
+        size++;
+        if(size == 2*levelSize-1){
+            levelSize *= 2;
+            filledSize = levelSize - 1;
+
+        }
+    }
+    public final Node get(int position)
+    {
+        if(position == 1)
+            return root;
+        else
+        {
+            Node temp = root;
+            int level = getLevel(position) - 1;
+            int levelCount = (int)Math.pow(2,level);
+            int i = position - levelCount;
+            while (true)
             {
-                global.push(local.pop());
+                levelCount /=2;
+                if (i < levelCount)
+                {
+                    temp = temp.left;
+                } else
+                    temp = temp.right;
+                level--;
+                if (level == 0)
+                    return temp;
             }
         }
-        System.out.println();
+    }
+    protected int getLevel(int number)
+    {
+        int i = 0;
+        while(number > Math.pow(2,i))
+        {
+            i++;
+        }
+        return i;
+    }
+    public Node popFirst()
+    {
+        Node first = new Node(root.key,root.value);
+        if(last != root)
+        {
+            if (last.parent.left == last)
+                last.parent.left = null;
+            else
+                last.parent.right = null;
+            swap(root,last);
+            function2.heapify(root);
+        }
+        size--;
+        return first;
+    }
+    protected void swap(Node par, Node ans)
+    {
+        Node temp = new Node(par.key, par.value);
+        par.value = ans.value;
+        par.key = ans.key;
+        ans.value = temp.value;
+        ans.key = temp.key;
     }
 }
