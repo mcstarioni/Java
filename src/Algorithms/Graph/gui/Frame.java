@@ -17,19 +17,14 @@ public class Frame extends JFrame {
         addPanels();
         this.pack();
         this.setVisible(true);
-
     }
     private void addPanels()
     {
         Container panel = this.getContentPane();
-
         panel.add(new ControlPanel(), BorderLayout.NORTH);
-
         JPanel jPanel = new JPanel();
-
         jPanel.add(new InputPanel(3));
         jPanel.add(new OutputPanel());
-
         panel.add(jPanel, BorderLayout.CENTER);
     }
 }

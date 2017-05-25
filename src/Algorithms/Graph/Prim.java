@@ -43,7 +43,6 @@ public class Prim {
             dist[i] = val;
         }
     }
-
     public static void main(String[] args) {
         System.out.println("Введите размер: ");
         Scanner scanner = new Scanner(System.in);

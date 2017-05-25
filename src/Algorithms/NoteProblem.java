@@ -13,7 +13,7 @@ public class NoteProblem {
         StringBuilder b = new StringBuilder();
         for (int i = 0; i < sol.length; i++) {
             if (sol[i] != 0)
-                b.append(sol[i]+" по "+notes[i]+", ");
+                b.append(sol[i]+" купюр, ценой в "+notes[i]+", ");
         }
         b.delete(b.length() - 2, b.length() - 1);
         System.out.println(b +".");
