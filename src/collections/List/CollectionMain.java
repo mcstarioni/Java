@@ -1,7 +1,4 @@
-package Collections.List;
-
-import java.util.Iterator;
-import java.util.function.Consumer;
+package collections.List;
 
 /**
  * Created by mcstarioni on 20.10.2016.

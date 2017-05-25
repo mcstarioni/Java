@@ -1,4 +1,4 @@
-package Collections.Tree;
+package collections.Tree;
 
 /**
  * Created by mcstarioni on 03.05.2017.

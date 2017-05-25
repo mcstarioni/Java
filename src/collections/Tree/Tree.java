@@ -1,6 +1,6 @@
-package Collections.Tree;
+package collections.Tree;
 
-import Collections.List.Stack;
+import collections.List.Stack;
 
 /**
  * Created by mcstarioni on 03.05.2017.

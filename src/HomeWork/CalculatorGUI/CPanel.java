@@ -1,12 +1,16 @@
 package HomeWork.CalculatorGUI;
 
+import javafx.scene.image.*;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.jar.JarFile;
 
 /**
  * Created by mcstarioni on 15.11.2016.
@@ -15,9 +19,11 @@ public class CPanel extends JPanel implements ActionListener,KeyListener{
     JTextField text;
     JCheckBox rpn;
     JButton enter;
+    RPN counter;
     public CPanel()
     {
         super();
+        counter = new RPN();
         setLayout(new BorderLayout(0,5));
         Box top = Box.createHorizontalBox();
         rpn = new JCheckBox("RPN");
@@ -65,12 +71,21 @@ public class CPanel extends JPanel implements ActionListener,KeyListener{
                 {
                     temp.add(word);
                 }
-                text.setText(""+RPN.count(temp));
+                text.setText(""+counter.count(temp));
             }
             else
             {
-                text.setText(""+RPN.calculate(text.getText()));
-                rpn.setSelected(true);
+                try
+                {
+                    Double result = counter.calculate(text.getText());
+                    text.setText("" +result.toString());
+                    rpn.setSelected(true);
+                }catch (Exception a)
+                {
+                    a.printStackTrace();
+                }
+                ImageView img = new ImageView();
+                //img.
             }
         }
         else {
@@ -81,7 +96,7 @@ public class CPanel extends JPanel implements ActionListener,KeyListener{
     public void keyTyped(KeyEvent e) {
         char c = e.getKeyChar();
         System.out.println(c);
-        if(Character.isDigit(c) || RPN.isOperator(""+c) || RPN.isDelimiter(c)) {
+        if(Character.isDigit(c) ) {
             text.setText(text.getText() + e.getKeyChar());
         }
         else

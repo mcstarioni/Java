@@ -1,4 +1,4 @@
-package Collections;
+package collections;
 
 /**
  * Created by mcstarioni on 23.10.2016.

@@ -1,4 +1,4 @@
-package Collections.Map;
+package collections.Map;
 
 /**
  * Created by mcstarioni on 06.12.2016.

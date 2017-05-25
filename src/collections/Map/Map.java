@@ -1,6 +1,4 @@
-package Collections.Map;
-
-import Collections.Collection;
+package collections.Map;
 
 /**
  * Created by mcstarioni on 27.02.2017.

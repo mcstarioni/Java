@@ -1,6 +1,4 @@
-package Collections.Tree;
-
-import Collections.List.Stack;
+package collections.Tree;
 
 /**
  * Created by mcstarioni on 27.04.2017.
@@ -126,5 +124,29 @@ public class BinaryTree<K,V> extends Tree<K,V>
         par.key = ans.key;
         ans.value = temp.value;
         ans.key = temp.key;
+    }
+    protected void remove(int position)
+    {
+        Node temp = get(position);
+        swap(temp,last);
+        if(last != root)
+        {
+            if (last.parent.left == last)
+                last.parent.left = null;
+            else
+                last.parent.right = null;
+        }
+    }
+    public static void main(String[] args)
+    {
+        BinaryTree<Integer,String> tree = new BinaryTree<>();
+        for(int i = 0; i < 30; i++)
+        {
+            tree.add(i,"");
+        }
+        tree.printTree();
+        tree.remove(3);
+        tree.add(5,"");
+        tree.printTree();
     }
 }

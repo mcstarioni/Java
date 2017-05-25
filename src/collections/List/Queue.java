@@ -1,4 +1,4 @@
-package Collections.List;
+package collections.List;
 
 /**
  * Created by mcstarioni on 02.11.2016.

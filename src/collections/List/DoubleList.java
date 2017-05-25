@@ -1,46 +1,39 @@
-package Collections.List;
+package collections.List;
 
-import Collections.Collection;
+
+import collections.Collection;
 
 import java.util.Iterator;
-import java.util.Spliterator;
-import java.util.function.Consumer;
 
 /**
  * Created by mcstarioni on 21.10.2016.
  */
-public class CircleList<T> implements List<T>,Iterable<T>
+public class DoubleList<T> implements List<T>
 {
     private Node head;
+    private Node tail;
     private int size;
-    public CircleList()
-    {
-        head = new Node(null,head,head);
-        size = 0;
-    }
-    @Override
+
     public void add(T element)
     {
         if(size == 0)
         {
-            head.next = new Node(element,head,head);
-            head.prev = head.next;
+            head.next = new Node(element,tail,head);
+            tail.prev = head.next;
         }
         else
         {
             Node temp = head;
-            while(temp.next != head)
+            while(temp.next != tail)
             {
                 temp = temp.next;
             }
-            temp.next = new Node(element,head,temp);
-            head.prev = temp.next;
+            temp.next = new Node(element,tail,temp);
+            tail.prev = temp.next;
         }
         size++;
 
     }
-
-    @Override
     public void add(T element, int index)
     {
         if(indexError(index))
@@ -59,7 +52,6 @@ public class CircleList<T> implements List<T>,Iterable<T>
         size++;
     }
 
-    @Override
     public void modifyAt(T element, int index)
     {
         if(indexError(index))
@@ -73,8 +65,6 @@ public class CircleList<T> implements List<T>,Iterable<T>
             i++;
         temp.element = element;
     }
-
-    @Override
     public void removeAt(int index)
     {
         if(indexError(index))
@@ -117,7 +107,16 @@ public class CircleList<T> implements List<T>,Iterable<T>
         }
         return -1;
     }
-    @Override
+    public <E extends Collection<T>> void merge(E master, E merged) {
+    }
+
+    public DoubleList()
+    {
+        head = new Node(null,tail,null);
+        tail = new Node(null,null,head);
+        size = 0;
+    }
+
     public T elementAt(int index)
     {
         if(indexError(index))
@@ -132,35 +131,30 @@ public class CircleList<T> implements List<T>,Iterable<T>
         return temp.element;
     }
 
-    @Override
     public boolean isEmpty()
     {
         return (size == 0);
     }
 
-    @Override
-    public boolean indexError(int index)
-    {
-        return ((index >= size) || (index < 0));
-    }
-
-    @Override
     public void clear()
     {
-        head.next = head;
-        head.prev = head;
+        head.next = tail;
+        tail.prev = head;
     }
 
-    @Override
     public int size()
     {
         return size;
     }
 
-    @Override
-    public <E extends Collection<T>> void merge(E master, E merged)
+    public boolean indexError(int index)
     {
+        return ((index >= size) || (index < 0));
+    }
 
+    public Iterator iterator()
+    {
+        return new ListIterator();
     }
 
     private class ListIterator implements Iterator<T>
@@ -173,7 +167,7 @@ public class CircleList<T> implements List<T>,Iterable<T>
         }
         @Override
         public boolean hasNext() {
-            return next != head;
+            return next != tail && size != 0;
         }
 
         @Override
@@ -191,17 +185,11 @@ public class CircleList<T> implements List<T>,Iterable<T>
             }
         }
     }
-    @Override
-    public Iterator iterator()
-    {
-        return null;
-    }
-    
     private class Node
     {
-        protected T element;
-        protected Node next;
-        protected Node prev;
+        T element;
+        Node next;
+        Node prev;
         Node(T element, Node next)
         {
             this.element = element;

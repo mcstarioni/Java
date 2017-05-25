@@ -1,42 +1,44 @@
-package Collections.List;
+package collections.List;
 
-import Collections.Collection;
+import collections.Collection;
 
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
-import java.util.Spliterator;
-import java.util.function.Consumer;
 
 /**
  * Created by mcstarioni on 21.10.2016.
  */
-public class SingleList<T> implements List<T>
+public class CircleList<T> implements List<T>,Iterable<T>
 {
     private Node head;
-    private int size = 0;
-    public SingleList()
+    private int size;
+    public CircleList()
     {
-        head = new Node(null,null);
+        head = new Node(null,head,head);
+        size = 0;
     }
+    @Override
     public void add(T element)
     {
-        if(head.next == null)
+        if(size == 0)
         {
-            head.next = new Node(element,null);
+            head.next = new Node(element,head,head);
+            head.prev = head.next;
         }
         else
         {
-            Node temp = head.next;
-            while(temp.next != null)
+            Node temp = head;
+            while(temp.next != head)
             {
                 temp = temp.next;
             }
-            temp.next = new Node(element,null);
+            temp.next = new Node(element,head,temp);
+            head.prev = temp.next;
         }
         size++;
+
     }
-    // {h 0 1 2 3 4 5} -> {h 0 1 2 3 _ 4 5} -> {h 0 1 2 3 4 5 6}
+
+    @Override
     public void add(T element, int index)
     {
         if(indexError(index))
@@ -49,9 +51,9 @@ public class SingleList<T> implements List<T>
         {
             temp = temp.next;
         }
-        if(temp.next != null)
-            return;
-        temp.next = new Node(element,temp.next);
+        Node inserted = new Node(element,temp.next,temp);
+        temp.next.prev = inserted;
+        temp.next = inserted;
         size++;
     }
 
@@ -78,15 +80,18 @@ public class SingleList<T> implements List<T>
             System.out.println("\nError: Out of bounds.");
             return;
         }
-        Node node1 = head;
-        Node node2 = head.next;
+        //          node1   node2
+        // (H:n,0) (0:1,H) (1:2,0) 2 3 4 5 T
+        // (H:n,1) (0:1,H) (1:2,H) 2 3 4 5 T
+        Node node1 = head.next;
+        Node node2;
         for (int i = 0; i < index; i++)
         {
             node1 = node1.next;
-            node2 = node2.next;
         }
-        node2 = node2.next;
-        node1.next = node2;
+        node2 = node1.next;
+        node2.prev = node1.prev;
+        node1.prev.next = node2;
         size--;
     }
     public void removeObj(T object)
@@ -99,7 +104,6 @@ public class SingleList<T> implements List<T>
         Node temp = head.next;
         for(int i = 0; i < size; i++)
         {
-            //System.out.println(temp.toString());
             if(temp.element == object)
             {
                 return i;
@@ -111,9 +115,9 @@ public class SingleList<T> implements List<T>
         }
         return -1;
     }
+    @Override
     public T elementAt(int index)
     {
-        //size = 10
         if(indexError(index))
         {
             System.out.println("\nError: Out of bounds.");
@@ -126,73 +130,51 @@ public class SingleList<T> implements List<T>
         return temp.element;
     }
 
+    @Override
     public boolean isEmpty()
     {
-        return size == 0;
+        return (size == 0);
     }
 
-    public void clear()
-    {
-        head.next = null;
-        size = 0;
-    }
-    public  void reverse(Node start)
-    {
-        if(start.next == null)
-        {
-            head = new Node(null,start);
-        }else
-        {
-            reverse(start.next);
-            start.next.next = start;
-        }
-    }
     @Override
-    public <E extends Collection<T>> void merge(E master, E merged)
-    {
-
-    }
-    public Node getHead(){return head;}
-
-    public int size()
-    {
-        return size;
-    }
-
-    public SingleList<T> copy()
-    {
-        SingleList<T> list = new SingleList<T>();
-        for (Node temp = head; temp != null; temp = temp.next)
-        {
-            list.add(temp.element);
-        }
-        return list;
-    }
-
     public boolean indexError(int index)
     {
         return ((index >= size) || (index < 0));
     }
 
-    /**
-     * Returns an iterator over elements of type {@code T}.
-     *
-     * @return an Iterator.
-     */
-    public Iterator<T> iterator() {
-        return new ListIterator();
+    @Override
+    public void clear()
+    {
+        head.next = head;
+        head.prev = head;
     }
 
-    private class ListIterator implements Iterator<T> {
+    @Override
+    public int size()
+    {
+        return size;
+    }
+
+    @Override
+    public <E extends Collection<T>> void merge(E master, E merged)
+    {
+
+    }
+
+    private class ListIterator implements Iterator<T>
+    {
         Node next;
         public ListIterator()
         {
             next = head.next;
 
         }
+        @Override
         public boolean hasNext() {
-            return next != null;
+            return next != head;
         }
+
+        @Override
         public T next() {
             if (hasNext())
             {
@@ -207,15 +189,28 @@ public class SingleList<T> implements List<T>
             }
         }
     }
+    @Override
+    public Iterator iterator()
+    {
+        return null;
+    }
+    
     private class Node
     {
         protected T element;
         protected Node next;
-        Node(T element,Node next)
+        protected Node prev;
+        Node(T element, Node next)
         {
             this.element = element;
             this.next = next;
+            prev = null;
         }
-        //protected boolean hasNext(){return this.next != null;}
+        Node(T element, Node next, Node prev)
+        {
+            this.element = element;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }

@@ -1,39 +1,38 @@
-package Collections.List;
+package collections.List;
 
-
-import Collections.Collection;
+import collections.Collection;
 
 import java.util.Iterator;
 
 /**
  * Created by mcstarioni on 21.10.2016.
  */
-public class DoubleList<T> implements List<T>
+public class SingleList<T> implements List<T>
 {
     private Node head;
-    private Node tail;
-    private int size;
-
+    private int size = 0;
+    public SingleList()
+    {
+        head = new Node(null,null);
+    }
     public void add(T element)
     {
-        if(size == 0)
+        if(head.next == null)
         {
-            head.next = new Node(element,tail,head);
-            tail.prev = head.next;
+            head.next = new Node(element,null);
         }
         else
         {
-            Node temp = head;
-            while(temp.next != tail)
+            Node temp = head.next;
+            while(temp.next != null)
             {
                 temp = temp.next;
             }
-            temp.next = new Node(element,tail,temp);
-            tail.prev = temp.next;
+            temp.next = new Node(element,null);
         }
         size++;
-
     }
+    // {h 0 1 2 3 4 5} -> {h 0 1 2 3 _ 4 5} -> {h 0 1 2 3 4 5 6}
     public void add(T element, int index)
     {
         if(indexError(index))
@@ -46,12 +45,13 @@ public class DoubleList<T> implements List<T>
         {
             temp = temp.next;
         }
-        Node inserted = new Node(element,temp.next,temp);
-        temp.next.prev = inserted;
-        temp.next = inserted;
+        if(temp.next != null)
+            return;
+        temp.next = new Node(element,temp.next);
         size++;
     }
 
+    @Override
     public void modifyAt(T element, int index)
     {
         if(indexError(index))
@@ -65,6 +65,8 @@ public class DoubleList<T> implements List<T>
             i++;
         temp.element = element;
     }
+
+    @Override
     public void removeAt(int index)
     {
         if(indexError(index))
@@ -72,18 +74,15 @@ public class DoubleList<T> implements List<T>
             System.out.println("\nError: Out of bounds.");
             return;
         }
-        //          node1   node2
-        // (H:n,0) (0:1,H) (1:2,0) 2 3 4 5 T
-        // (H:n,1) (0:1,H) (1:2,H) 2 3 4 5 T
-        Node node1 = head.next;
-        Node node2;
+        Node node1 = head;
+        Node node2 = head.next;
         for (int i = 0; i < index; i++)
         {
             node1 = node1.next;
+            node2 = node2.next;
         }
-        node2 = node1.next;
-        node2.prev = node1.prev;
-        node1.prev.next = node2;
+        node2 = node2.next;
+        node1.next = node2;
         size--;
     }
     public void removeObj(T object)
@@ -96,6 +95,7 @@ public class DoubleList<T> implements List<T>
         Node temp = head.next;
         for(int i = 0; i < size; i++)
         {
+            //System.out.println(temp.toString());
             if(temp.element == object)
             {
                 return i;
@@ -107,18 +107,9 @@ public class DoubleList<T> implements List<T>
         }
         return -1;
     }
-    public <E extends Collection<T>> void merge(E master, E merged) {
-    }
-
-    public DoubleList()
-    {
-        head = new Node(null,tail,null);
-        tail = new Node(null,null,head);
-        size = 0;
-    }
-
     public T elementAt(int index)
     {
+        //size = 10
         if(indexError(index))
         {
             System.out.println("\nError: Out of bounds.");
@@ -133,18 +124,45 @@ public class DoubleList<T> implements List<T>
 
     public boolean isEmpty()
     {
-        return (size == 0);
+        return size == 0;
     }
 
     public void clear()
     {
-        head.next = tail;
-        tail.prev = head;
+        head.next = null;
+        size = 0;
     }
+    public  void reverse(Node start)
+    {
+        if(start.next == null)
+        {
+            head = new Node(null,start);
+        }else
+        {
+            reverse(start.next);
+            start.next.next = start;
+        }
+    }
+    @Override
+    public <E extends Collection<T>> void merge(E master, E merged)
+    {
+
+    }
+    public Node getHead(){return head;}
 
     public int size()
     {
         return size;
+    }
+
+    public SingleList<T> copy()
+    {
+        SingleList<T> list = new SingleList<T>();
+        for (Node temp = head; temp != null; temp = temp.next)
+        {
+            list.add(temp.element);
+        }
+        return list;
     }
 
     public boolean indexError(int index)
@@ -152,25 +170,25 @@ public class DoubleList<T> implements List<T>
         return ((index >= size) || (index < 0));
     }
 
-    public Iterator iterator()
-    {
+    /**
+     * Returns an iterator over elements of type {@code T}.
+     *
+     * @return an Iterator.
+     */
+    public Iterator<T> iterator() {
         return new ListIterator();
     }
 
-    private class ListIterator implements Iterator<T>
-    {
+    private class ListIterator implements Iterator<T> {
         Node next;
         public ListIterator()
         {
             next = head.next;
 
         }
-        @Override
         public boolean hasNext() {
-            return next != tail && size != 0;
+            return next != null;
         }
-
-        @Override
         public T next() {
             if (hasNext())
             {
@@ -187,20 +205,13 @@ public class DoubleList<T> implements List<T>
     }
     private class Node
     {
-        T element;
-        Node next;
-        Node prev;
-        Node(T element, Node next)
+        protected T element;
+        protected Node next;
+        Node(T element,Node next)
         {
             this.element = element;
             this.next = next;
-            prev = null;
         }
-        Node(T element, Node next, Node prev)
-        {
-            this.element = element;
-            this.next = next;
-            this.prev = prev;
-        }
+        //protected boolean hasNext(){return this.next != null;}
     }
 }

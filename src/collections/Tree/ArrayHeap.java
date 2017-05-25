@@ -1,4 +1,4 @@
-package Collections.Tree;
+package collections.Tree;
 
 import java.util.ArrayList;
 

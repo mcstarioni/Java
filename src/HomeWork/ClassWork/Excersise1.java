@@ -1,8 +1,7 @@
 package HomeWork.ClassWork;
 
-import Collections.List.CollectionMain;
-import Collections.List.List;
-import Collections.List.SingleList;
+import collections.List.CollectionMain;
+import collections.List.SingleList;
 
 /**
  * Created by mcstarioni on 16.11.2016.

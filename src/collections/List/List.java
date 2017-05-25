@@ -1,6 +1,6 @@
-package Collections.List;
+package collections.List;
 
-import Collections.Collection;
+import collections.Collection;
 
 /**
  * Created by mcstarioni on 22.10.2016.

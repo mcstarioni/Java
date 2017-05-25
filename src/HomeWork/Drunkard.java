@@ -1,7 +1,7 @@
 package HomeWork;
 
-import Collections.List.CollectionMain;
-import Collections.List.Queue;
+import collections.List.CollectionMain;
+import collections.List.Queue;
 
 import java.util.Random;
 

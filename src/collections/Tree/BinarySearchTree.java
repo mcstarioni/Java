@@ -1,20 +1,18 @@
-package Collections.Tree;
+package collections.Tree;
 
-import Collections.List.Stack;
-import Collections.Map.Pair;
+import collections.Map.Pair;
 import java.util.Iterator;
 import java.util.function.Consumer;
 /**
  * Created by mcstarioni on 30.11.2016.
  */
-public class BinarySearchTree<K extends Comparable,V> extends BinaryTree<K,V>  //implements Iterable<V>
+public class BinarySearchTree<K extends Comparable<K>,V> extends Tree<K,V>  //implements Iterable<V>
 {
     public BinarySearchTree()
     {
         root = null;
     }
     public BinarySearchTree(K key, V value){root = new Node(key,value);}
-    @Override
     public void add(K key, V value)
     {
         Node added = new Node(key,value);

@@ -1,16 +1,23 @@
 package HomeWork.CalculatorGUI;
 
-import Collections.List.Stack;
-import Collections.Map.Map;
-import Collections.Map.Pair;
+import collections.Map.Pair;
 
+import java.util.Map;
+import java.util.Stack;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by mcstarioni on 15.11.2016.
  */
 public class RPN
 {
+    private Pair<Character,Integer> variable;
+    private String input;
+    public RPN()
+    {
+        variable = null;
+    }
     public static void main(String[] args) {
         String infixTest = "sin(Pi)^2 + cos(Pi)^2";
         String test[] = {"PI","2","/","sin","asin","2","*"};
@@ -24,18 +31,25 @@ public class RPN
         {
             array.add(s);
         }
-        System.out.println(" = "+RPN.calculate(infixTest));
+        System.out.println(Math.log10(100));
     }
-    public static double calculate(String infixInput)
+    public void reserveVariable(Character var)
+    {
+        variable = new Pair<>(var,null);
+    }
+    public void assignVariable(Integer value)
+    {
+        variable.setValue(value);
+    }
+    public  double calculate(String infixInput) throws Exception
     {
         return count(getRPN(infixInput));
     }
-    public static ArrayList<String> getRPN(String input)
+    private ArrayList<String> getRPN(String input) throws Exception
     {
         System.out.println(input + " length: "+input.length());
         ArrayList<String> result = new ArrayList<>(input.length());
         Stack<String> operators = new Stack<>();
-        int braces = 0;
         for (int i = 0; i < input.length(); i++)
         {
             System.out.print("Result:  ");
@@ -59,10 +73,18 @@ public class RPN
                         break;
                     }
                 }while(RPN.isDigit(c) || c == '.');
-                if(Math.abs(Double.parseDouble(digits.toString())-Math.PI)<0.1)
+                if(Math.abs(Double.parseDouble(digits.toString())-Math.PI) < 0.1)
                 {
                     digits.delete(0,digits.length());
-                    digits.append("PI");
+                    digits.append("pi");
+                }
+                else
+                {
+                    if(Math.abs(Double.parseDouble(digits.toString())-Math.E) < 0.1)
+                    {
+                        digits.delete(0,digits.length());
+                        digits.append("e");
+                    }
                 }
                 result.add(digits.toString());
             }
@@ -74,6 +96,7 @@ public class RPN
                     letters.append(c);
                     if(i < input.length() - 1)
                     {
+
                         i++;
                         c = input.charAt(i);
                     }else
@@ -82,14 +105,30 @@ public class RPN
                     }
                 }while(Character.isLetter(c));
                 String word = letters.toString();
-                if(word.equals("pi") || word.equals("Pi") || word.equals("PI"))
+                if(word.length() == 1)
                 {
-                    result.add("PI");
-                }else
-                {
-                    if(isFunction(word))
+                    if(variable == null)
                     {
-                        operators.push(word);
+                        throw new Exception("Variable found");
+                    }
+                }
+                else
+                {
+                    if (word.equals("pi") || word.equals("Pi") || word.equals("PI"))
+                    {
+                        result.add("pi");
+                    } else
+                    {
+                        if (word.equals("E") || word.equals("e"))
+                        {
+                            result.add("e");
+                        } else
+                        {
+                            if (isFunction(word))
+                            {
+                                operators.push(word);
+                            }
+                        }
                     }
                 }
             }
@@ -116,7 +155,6 @@ public class RPN
                 if (c == '(')
                 {
                     operators.push(""+c);
-                    braces++;
                 } else
                 {
                     if (c == ')')
@@ -125,7 +163,6 @@ public class RPN
                         {
                             if (operators.peek().equals("("))
                             {
-                                braces--;
                                 operators.pop();
                                 break;
                             }
@@ -141,12 +178,11 @@ public class RPN
         }
         return result;
     }
-    public static double count(ArrayList<String> input)
+    public  double count(ArrayList<String> input)
     {
         Stack<Double> temp = new Stack<>();
-        for (int i = 0; i < input.size(); i++)
+        for (String value:input)
         {
-            String value = input.get(i);
             System.out.print(value + " ");
             char c = value.charAt(0);
             if (RPN.isDigit(c))
@@ -187,7 +223,7 @@ public class RPN
                     }
                 }else
                 {
-                    if(isFunction(value))
+                    if (isFunction(value))
                     {
                         Double a = temp.pop();
                         try{
@@ -223,6 +259,11 @@ public class RPN
                                     temp.push(Math.asin(a));
                                     break;
                                 }
+                                case 6:
+                                {
+                                    temp.push(Math.log(a));
+                                    break;
+                                }
                             }
                         }catch(Exception e)
                         {
@@ -230,9 +271,16 @@ public class RPN
                         }
                     }else
                     {
-                        if (value.equals("PI"))
+                        if (value.equals("pi"))
                         {
                             temp.push(Math.PI);
+                        }
+                        else
+                        {
+                            if (value.equals("e"))
+                            {
+                                temp.push(Math.E);
+                            }
                         }
                     }
                 }
@@ -242,11 +290,11 @@ public class RPN
         return temp.peek();
     }
     // 2 + 2*2*cos()
-    public static boolean isFunction(String s)
+    private static boolean isFunction(String s)
     {
         return (getFunction(s) != -1);
     }
-    public static int getFunction(String s)
+    private static int getFunction(String s)
     {
         switch (s)
         {
@@ -256,10 +304,11 @@ public class RPN
             case "ctg":return 3;
             case "acos":return 4;
             case "asin":return 5;
+            case "ln": return 6;
         }
         return -1;
     }
-    public static String getFunction(int n)
+    private static String getFunction(int n)
     {
         switch (n)
         {
@@ -269,24 +318,23 @@ public class RPN
             case 3: return "ctg";
             case 4: return "acos";
             case 5: return "asin";
+            case 6: return "ln";
         }
         return "";
     }
-    public static boolean isDigit(char c)
+    private static boolean isDigit(char c)
     {
         return (c >= '0' && c <= '9');
     }
-    public static boolean isOperator(String c)
+    private static boolean isOperator(String c)
     {
         return getOperation(c) != 6;
     }
-    public static boolean isDelimiter(char c)
+    private static boolean isDelimiter(char c)
     {
-        if (' ' == c)
-            return true;
-        return false;
+        return (' ' == c);
     }
-    public static int getPriority(String c)
+    private static int getPriority(String c)
     {
         switch (c)
         {
@@ -300,7 +348,7 @@ public class RPN
             return 4;
         return 5;
     }
-    public static int getOperation(String c)
+    private static int getOperation(String c)
     {
         switch (c)
         {
